@@ -1,31 +1,64 @@
 public class IADebutant implements StrategieDeJeu 
 {
-	public IADebutant()
-	{}
+	private JoueurVirtuel bot;
 	
-	public boolean jouer(Carte carteAJouer) 
+	public IADebutant(JoueurVirtuel botUtilisateur)
 	{
-		return false;
+		this.bot = botUtilisateur;
 	}
 
 	public int choisirAction() 
 	{
-		return 0;
+		int indexAction = this.determinerIndexActionAExecuterAleatoirement();
+		return(indexAction);
 	}
 
 	public Carte choisirCarte() 
 	{
-		return null;
+		int indexCarte = this.determinerIndexCarteAJouerAleatoirement();
+		Carte carteChoisie = (Carte)this.bot.getMain().toArray()[indexCarte];
+		return(carteChoisie);
 	}
 
 	public Carte choisirCarteApresHuit() 
 	{
-		return null;
+		int indexSymbole = this.determinerSymboleCarteAJouerAleatoirement();
+		Carte carte = null;
+		switch(indexSymbole)
+		{
+			case 1 : carte = new Carte(null, Symbole.CARREAU, null); break;
+			case 2 : carte = new Carte(null, Symbole.COEUR, null); break;		
+			case 3 : carte = new Carte(null, Symbole.PIQUE, null); break;
+			case 4 : carte = new Carte(null, Symbole.TREFLE, null); break;
+		}
+		return(carte);
 	}
 
 	public String choisirCarteSupplement() 
 	{
-		return null;
+		return("");
 	}
-
+	
+	public int determinerIndexActionAExecuterAleatoirement()
+	{
+		int indexAleatoire = (int)(1 + (Math.random() * (3 - 1)));	
+		return(indexAleatoire);
+	}
+	
+	public int determinerIndexCarteAJouerAleatoirement()
+	{
+		int indexAleatoire = (int)(Math.random() * (this.bot.getMain().size() - 0));	
+		return(indexAleatoire);
+	}
+	
+	public int determinerSymboleCarteAJouerAleatoirement()
+	{
+		int indexAleatoire = (int)(Math.random() * (5 - 1));	
+		return(indexAleatoire);
+	}
+	
+	public String proposerAjouterCarte()
+	{
+		return("N");
+	}
 }

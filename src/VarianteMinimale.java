@@ -99,60 +99,64 @@ public class VarianteMinimale extends Variante
 	
 	public void appliquerEffetCarte(LinkedList<Carte> cartesAJouer, Joueur joueurCarte) 
 	{	
-		if(this.partieAssociee.getDerniereCarte(cartesAJouer).getValeur().equals(Valeur.AS))
-		{
-			for(int nombreCartes = 0 ; nombreCartes < cartesAJouer.size() ; nombreCartes++)
+		System.out.println("taile cartesAJouer = " + cartesAJouer.size());
+		for(int indexCarte = cartesAJouer.size() - 1 ; indexCarte >= 0 ; indexCarte--)
+		{	
+			if(cartesAJouer.get(indexCarte).getValeur().equals(Valeur.AS))
+			{			
 				this.multiplicateurDePioche += 2;
-			this.carteEnMemoire = this.partieAssociee.getDerniereCarte(cartesAJouer);
-			System.out.println("carte mise en mémoire : " + this.carteEnMemoire.toString());
-		}
-		else if(this.partieAssociee.getDerniereCarte(cartesAJouer).getValeur().equals(Valeur.JOKER))
-		{
-			for(int nombreCartes = 0 ; nombreCartes < cartesAJouer.size() ; nombreCartes++)
+				this.carteEnMemoire = cartesAJouer.get(indexCarte);
+				this.carteDemandee = null;
+				System.out.println("carte mise en mémoire : " + this.carteEnMemoire.toString());			
+			}
+			else if(cartesAJouer.get(indexCarte).getValeur().equals(Valeur.JOKER))
+			{
 				this.multiplicateurDePioche += 5;
-			this.carteEnMemoire = this.partieAssociee.getDerniereCarte(cartesAJouer);
-			System.out.println("carte mise en mémoire : " + this.carteEnMemoire.toString());
-		}
-		else if(this.partieAssociee.getDerniereCarte(cartesAJouer).getValeur().equals(Valeur.HUIT))
-		{
-			this.multiplicateurDePioche = 0;
-			this.carteDemandee = this.partieAssociee.demanderCarteJoueur();
-			System.out.println("[carte demandée : " + this.carteDemandee.toString() + "]");
-			this.carteEnMemoire = this.partieAssociee.getDerniereCarte(cartesAJouer);
-			System.out.println("[carte spéciale mise en mémoire : " + this.carteEnMemoire.toString() + "]");
-		}
-		else if(this.partieAssociee.getDerniereCarte(cartesAJouer).getValeur().equals(Valeur.SEPT))
-		{
-			Joueur joueurX = joueurCarte;  
-			Joueur joueurSuivantX = joueurX.getJoueurSuivant(); 
-			for(int nombreCartes = 0 ; nombreCartes < cartesAJouer.size() ; nombreCartes++)
-			{
-				if(!joueurSuivantX.getJoueurSuivant().equals(joueurSuivantX))
-					joueurSuivantX = joueurSuivantX.getJoueurSuivant(); 
-				else
-				{
-					joueurSuivantX = joueurSuivantX.getJoueurSuivant().getJoueurSuivant();
-					this.multiplicateurDeTour++;
-				}
+				this.carteEnMemoire = cartesAJouer.get(indexCarte);
+				this.carteDemandee = null;
+				System.out.println("carte mise en mémoire : " + this.carteEnMemoire.toString());
 			}
-			for(int x = 0 ; x < this.multiplicateurDeTour ; x++)
+			else if(cartesAJouer.get(indexCarte).getValeur().equals(Valeur.HUIT))
+			{
+				this.multiplicateurDePioche = 0;
+				this.carteDemandee = this.partieAssociee.demanderCarteJoueur();
+				System.out.println("[carte demandée : " + this.carteDemandee.toString() + "]");
+				this.carteEnMemoire = cartesAJouer.get(indexCarte);
+				System.out.println("[carte spéciale mise en mémoire : " + this.carteEnMemoire.toString() + "]");
+			}
+			else if(cartesAJouer.get(indexCarte).getValeur().equals(Valeur.SEPT))
+			{
+				Joueur joueurX = joueurCarte;  
+				Joueur joueurSuivantX = joueurX.getJoueurSuivant(); 
+				for(int nombreCartes = 0 ; nombreCartes < cartesAJouer.size() ; nombreCartes++)
+				{
+					if(!joueurSuivantX.getJoueurSuivant().equals(joueurSuivantX))
+						joueurSuivantX = joueurSuivantX.getJoueurSuivant(); 
+					else
+					{
+						joueurSuivantX = joueurSuivantX.getJoueurSuivant().getJoueurSuivant();
+						this.multiplicateurDeTour++;
+					}
+				}
+				for(int x = 0 ; x < this.multiplicateurDeTour ; x++)
+					this.partieAssociee.jouerTour();
+				this.partieAssociee.setJoueurActif(joueurSuivantX);
 				this.partieAssociee.jouerTour();
-			this.partieAssociee.setJoueurActif(joueurSuivantX);
-			this.partieAssociee.jouerTour();
-		}
-		else if(this.partieAssociee.getDerniereCarte(cartesAJouer).getValeur().equals(Valeur.DIX))
-			this.partieAssociee.jouerTour();
-		else if(this.partieAssociee.getDerniereCarte(cartesAJouer).getValeur().equals(Valeur.VALET))
-		{
-			if(cartesAJouer.size() % 2 != 0)
-			{
-				for(int i = 0 ; i < this.partieAssociee.getJoueursDeLaPartie().size() ; i++)
-				{
-					Joueur joueurPrecedentX = ((Joueur)this.partieAssociee.getJoueursDeLaPartie().toArray()[i]).getJoueurPrecedent();
-					((Joueur)this.partieAssociee.getJoueursDeLaPartie().toArray()[i]).setJoueurPrecedent(((Joueur)this.partieAssociee.getJoueursDeLaPartie().toArray()[i]).getJoueurSuivant());
-					((Joueur)this.partieAssociee.getJoueursDeLaPartie().toArray()[i]).setJoueurSuivant(joueurPrecedentX);
-				}
 			}
+			else if(cartesAJouer.get(indexCarte).getValeur().equals(Valeur.DIX))
+				this.partieAssociee.jouerTour();
+			else if(cartesAJouer.get(indexCarte).getValeur().equals(Valeur.VALET))
+			{
+				if(cartesAJouer.size() % 2 != 0)
+				{
+					for(int i = 0 ; i < this.partieAssociee.getJoueursDeLaPartie().size() ; i++)
+					{
+						Joueur joueurPrecedentX = ((Joueur)this.partieAssociee.getJoueursDeLaPartie().toArray()[i]).getJoueurPrecedent();
+						((Joueur)this.partieAssociee.getJoueursDeLaPartie().toArray()[i]).setJoueurPrecedent(((Joueur)this.partieAssociee.getJoueursDeLaPartie().toArray()[i]).getJoueurSuivant());
+						((Joueur)this.partieAssociee.getJoueursDeLaPartie().toArray()[i]).setJoueurSuivant(joueurPrecedentX);
+					}
+				}
+			}			
 		}
 		joueurCarte.terminerTour();
 	}
@@ -165,8 +169,11 @@ public class VarianteMinimale extends Variante
 		{
 			if(this.carteEnMemoire == null)	
 			{
-				if(carteAJouer.getSymbole().equals(this.partieAssociee.getDerniereCarte(this.partieAssociee.getTalon()).getSymbole()) || carteAJouer.getValeur().equals(this.partieAssociee.getDerniereCarte(this.partieAssociee.getTalon()).getValeur()))
+				if(this.partieAssociee.getDerniereCarte(this.partieAssociee.getTalon()).getValeur().equals(Valeur.JOKER))
 					return(true);
+				else 
+					if(carteAJouer.getSymbole().equals(this.partieAssociee.getDerniereCarte(this.partieAssociee.getTalon()).getSymbole()) || carteAJouer.getValeur().equals(this.partieAssociee.getDerniereCarte(this.partieAssociee.getTalon()).getValeur()))
+						return(true);
 			}
 			else
 			{

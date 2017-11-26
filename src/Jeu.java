@@ -20,7 +20,9 @@ public class Jeu
 			this.partieDeJeu = Partie.creerPartie(this, variante, joueurs);
 			this.partieDeJeu.getVarianteCourante().setPartieAssociee(this.partieDeJeu);
 			this.creerSalon();
-			System.out.println("\nLa partie a été créée avec succès !\n");
+			System.out.println("--------------------------------------------------------------------------------");
+			System.out.println("           ... CHARGEMENT ...            La partie a été créée avec succès !");
+			System.out.println("--------------------------------------------------------------------------------");
 			this.partieDeJeu.lancerPartie();
 		}
 		else
@@ -41,18 +43,28 @@ public class Jeu
 	{
 		Scanner scanner = new Scanner(System.in);
 		StringBuffer texte = new StringBuffer();
-		int reponse;
+		String reponse;
 		texte.append("\n------------- BIENVENUE DANS LE J8-2017 v1.0 -------------\n::::::::::::::::::::: MENU PRINCIPAL :::::::::::::::::::::\n");
-		texte.append("1) Jouer une partie\n");
+		texte.append("\n1) Jouer une partie\n");
 		texte.append("2) Paramètres");
 		System.out.println(texte.toString());
-		reponse = scanner.nextInt();
-		while(reponse != 1 && reponse != 2)
+		reponse = scanner.nextLine();
+		boolean valide = false;
+		while(!valide)
 		{
-			System.out.println("Vous devez choisir une des propositions (1 ou 2). Veuillez resaisir une action à effectuer :");
-			reponse = scanner.nextInt();
-		}		
-		return(reponse);
+			if(Partie.estUnEntier(reponse))
+			{
+				if(Integer.parseInt(reponse) == 1 || Integer.parseInt(reponse) == 2)
+					valide = true;
+			}
+			else
+			{
+				valide = false;
+				System.out.println("Vous devez choisir une des propositions (1 ou 2). Veuillez resaisir une action à effectuer :");
+				reponse = scanner.nextLine();
+			}
+		}
+		return(Integer.parseInt(reponse));
 	}
 	
 	public Variante choisirVariante()
@@ -78,12 +90,12 @@ public class Jeu
 		switch(choixDifficulte)
 		{
 			case "1" : 
-				bot.setStrategieCourante((new IADebutant()));
+				bot.setStrategieCourante((new IADebutant(bot)));
 			case "2" : 
-				bot.setStrategieCourante((new IAAmateur()));
+				bot.setStrategieCourante((new IAAmateur(bot)));
 			case "3" : 
-				bot.setStrategieCourante((new IAConfirme()));
-			default : bot.setStrategieCourante((new IADebutant()));
+				bot.setStrategieCourante((new IAConfirme(bot)));
+			default : bot.setStrategieCourante((new IADebutant(bot)));
 		}
 	}
 	
@@ -91,28 +103,38 @@ public class Jeu
 	{
 		Scanner scanner = new Scanner(System.in);
 		StringBuffer texte = new StringBuffer();
-		String reponse = new String();
+		String reponse = new String();		
 		texte.append("\nJouer une partie > Choix de la difficulte pour le " + bot.getPseudo());
-		texte.append("\n-\n[ETAPE 1] Veuillez choisir une des difficultés proposées (par défaut, le bot sera débutant :\n");
-		texte.append("1) Joueur débutant\n");
+		texte.append("\n-------------------------------------------------------\n[ETAPE 3] Veuillez choisir une des difficultés proposées (par défaut, le bot sera débutant) :\n");
+		texte.append("\n1) Joueur débutant\n");
 		texte.append("2) Joueur amateur\n");
 		texte.append("3) Joueur confirme\n");
-		texte.append("[Appuyer sur la touche entrée pour continuer]");
+		texte.append("                       [Appuyer sur la touche entrée pour continuer]");
 		System.out.println(texte.toString());
 		reponse = scanner.nextLine();
 		if(reponse.trim().equals(""))
-			return("1");
+			reponse =  "1";
 		else
 		{
-			while((!reponse.equals("1") && !reponse.equals("2") && !reponse.equals("3")) || (!this.partieDeJeu.estUnEntier(reponse)))
+			while((!reponse.equals("1") && !reponse.equals("2") && !reponse.equals("3")) || (!Partie.estUnEntier(reponse)))
 			{
-				System.out.println("Vous devez choisir une des propositions (un nombre entre [1 et 3]) ou appuyer sur la touche entrée ! Veuillez resaisir la difficulté :");
+				System.out.println("\nVous devez choisir une des propositions (un nombre entre [1 et 3]), ou appuyer sur la touche entrée.\nVeuillez resaisir la difficulté :");
 				reponse = new String(scanner.nextLine());
 				if(reponse.trim().equals(""))
-					return("1");
-			}			
-			return(reponse);		
+					reponse = "1";
+			}					
 		}
+		texte = new StringBuffer("");
+		texte.append("\nLa difficulté ");
+		if(reponse.equals("1"))
+			texte.append("débutant");
+		else if(reponse.equals("2"))
+			texte.append("amateur");
+		else
+			texte.append("confirmé");
+		texte.append(" a été choisie.\n");
+		System.out.println(texte.toString());	
+		return(reponse);
 	}
 	
 	public String selectionnerVariante()
@@ -120,13 +142,14 @@ public class Jeu
 		Scanner scanner = new Scanner(System.in);
 		StringBuffer texte = new StringBuffer();
 		String reponse = new String();
+		texte.append("\n::::::::::::::::::: LANCEMENT D\'UNE PARTIE ::::::::::::::::::::\n");
 		texte.append("\nJouer une partie > Choix de la variante");
-		texte.append("\n-\n[ETAPE 1] Veuillez choisir une des variantes proposées (par défaut, la variante Minimale est choisie) :\n");
-		texte.append("1) Variante Minimale\n");
+		texte.append("\n---------------------------------------\n[ETAPE 1] Veuillez choisir une des variantes proposées (par défaut, la variante Minimale sera choisie) :\n");
+		texte.append("\n1) Variante Minimale\n");
 		texte.append("2) Variante Monclar\n");
 		texte.append("3) Variante 4\n");
 		texte.append("4) Variante 5\n");
-		texte.append("[Appuyer sur entrer pour continuer]");
+		texte.append("                       [Appuyer sur la touche entrée pour continuer]");
 		System.out.println(texte.toString());
 		reponse = scanner.nextLine();
 		if(reponse.trim().equals(""))
@@ -148,16 +171,35 @@ public class Jeu
 		StringBuffer texte = new StringBuffer();
 		String reponse = new String();
 		texte.append("\nJouer une partie > Enregistrement du nombres joueur");
-		texte.append("\n-\n[ETAPE 3] Veuillez choisir le nombre de joueurs (par défaut, " + this.optionsDeJeu[0] + " joueurs joueront la partie) :");
+		texte.append("\n---------------------------------------------------\n[ETAPE 2] Veuillez choisir le nombre de joueurs (par défaut, " + this.optionsDeJeu[0] + " joueurs participeront à la partie) :\n");
+		texte.append("\n                       [Appuyer sur la touche entrée pour continuer]");
 		System.out.println(texte.toString());
 		reponse = scanner.nextLine();
 		if(!reponse.trim().equals(""))
 		{
-			while(!this.estUnEntier(reponse) || reponse.equals("1"))
+			while(!Partie.estUnEntier(reponse) || reponse.equals("1"))
 			{
-				System.out.println("Vous devez entrer un nombre ! Veuillez resaisir le nombre de joueurs :");
+				texte = new StringBuffer("");
+				texte.append("\nVous devez entrer un nombre ! Veuillez resaisir le nombre de joueurs :");
+				texte.append("\n\n                       [Appuyer sur la touche entrée pour continuer]");
+				System.out.println(texte.toString());
 				reponse = new String(scanner.nextLine());
 			}	
+			//if not enough cards for all players, add a new deck
+			int nombreDeJeuxAvant = Integer.parseInt(this.optionsDeJeu[1]);	
+			int compteur = 0;
+			while(!this.verifierCompatibiliteNbJoueursNbCartes(reponse))
+			{
+				this.optionsDeJeu[1] = (Integer.parseInt(this.optionsDeJeu[1]) + 1) + "";
+				compteur++;
+			}			
+			int nombreDeJeuxApres = Integer.parseInt(this.optionsDeJeu[1]);
+			if(nombreDeJeuxAvant != nombreDeJeuxApres)
+			{
+				texte = new StringBuffer("");
+				texte.append("\nNous avons dû ajouter " + compteur + " en raison du nombre de joueurs. \nVous jouez maintenant avec " + this.optionsDeJeu[1] + " paquets de cartes." );
+				System.out.println(texte.toString());
+			}
 			this.optionsDeJeu[0] = reponse;
 		}
 		int nombreJoueurs = Integer.parseInt(this.optionsDeJeu[0]);
@@ -176,16 +218,22 @@ public class Jeu
 				tableauDeJoueurs[i] = bot;
 			}
 			adversaires.add(tableauDeJoueurs[i]);
-		}			
+		}	
+		texte = new StringBuffer("");
+		StringBuffer lobbyText = new StringBuffer("\n[SALON DES JOUEURS - " + nombreJoueurs + " joueurs enregistrés]\n");
 		for(int x = 0 ; x < nombreJoueurs ; x++)
 		{
 			if(x == 0)
 			{
-				System.out.println("\n[ETAPE 4] Veuillez saisir votre pseudo :");
+				texte.append("\n[ETAPE 3] Veuillez saisir votre pseudo :\n\n");
+				texte.append("                       [Appuyer sur la touche entrée pour continuer]\n\n");
+				System.out.println(texte.toString());
 				pseudoJoueur = new String(scanner.nextLine());
 				while(pseudoJoueur == null || pseudoJoueur.trim().equals(""))
 				{
-					System.out.println("Vous devez entrer un pseudo (non vide !). Veuillez en resaisir un :");			
+					texte = new StringBuffer("");
+					texte.append("\nVous devez entrer un pseudo (non vide). Veuillez en resaisir un :");		
+					System.out.println(texte.toString());
 					pseudoJoueur = new String(scanner.nextLine());
 				}
 				//set concrete player's pseudo
@@ -206,22 +254,10 @@ public class Jeu
 			adversairesJoueurX.remove(adversairesJoueurX.indexOf(tableauDeJoueurs[x]));				
 			tableauDeJoueurs[x].setAdversaires(adversairesJoueurX);
 			joueursEnregistres.add(tableauDeJoueurs[x]);
-			System.out.println("joueur added : "+ tableauDeJoueurs[x].getPseudo());
+			lobbyText.append("." + tableauDeJoueurs[x].getPseudo() + "\n");			
 		}	
+		System.out.println(lobbyText.toString());
 		return(joueursEnregistres);
-	}
-	
-	public boolean estUnEntier(String valeur)
-	{
-		try
-		{
-			Integer.parseInt(valeur);
-		}
-		catch(NumberFormatException e)
-		{
-			return(false);
-		}
-		return(true);
 	}
 	
 	public void creerSalon()
@@ -243,8 +279,9 @@ public class Jeu
 		reponse = scanner.nextLine();
 		while(!reponse.equals("1") && !reponse.equals("2") && !reponse.equals("3"))
 		{
-			System.out.println("Vous devez entrer l'une des trois propositions. Veuillez resaisir l'option que vous souhaitez modifer :");
-			reponse = new String(scanner.nextLine());
+			texte.append("Vous devez entrer l'une des trois propositions. Veuillez resaisir l'option que vous souhaitez modifer :");
+			System.out.println(texte.toString());
+			reponse = new String(scanner.nextLine());			
 		}
 		texte = new StringBuffer();
 		switch(reponse)
@@ -256,25 +293,51 @@ public class Jeu
 				reponse = scanner.nextLine();
 				if(!reponse.trim().equals(""))
 				{	
-					while(!this.estUnEntier(reponse) || reponse.equals("1"))
+					while((!Partie.estUnEntier(reponse) || reponse.equals("1")))
 					{
-						System.out.println("Vous devez entrer un nombre, qui doit être valide (différent de 1) ! Veuillez resaisir le nombre de joueurs :");
+						texte.append("\nVous devez entrer un nombre qui doit être valide (différent de 1). Veuillez resaisir le nombre de joueurs :");
+						System.out.println(texte.toString());
 						reponse = new String(scanner.nextLine());
 					}
+					//if not enough cards for all players, add a new deck
+					while(!this.verifierCompatibiliteNbJoueursNbCartes(reponse))
+						this.optionsDeJeu[1] = (Integer.parseInt(this.optionsDeJeu[1]) + 1) + "";
 					this.optionsDeJeu[0] = reponse;
 				}
 				break;
 			case "2" : 
 				texte.append("\nParamètres > Nombre de jeux de cartes");
-				texte.append("\n-\nVeuillez choisir le nombre de jeux de cartes :");
+				texte.append("\n-\nVeuillez choisir le nombre de jeux de cartes (par défaut, " + this.optionsDeJeu[1]);
+				if(Integer.parseInt(this.optionsDeJeu[1]) == 1)
+					texte.append(" jeu de cartes est défini) :");
+				else
+					texte.append(" jeux de cartes sont définis) :");
 				System.out.println(texte.toString());
 				reponse = scanner.nextLine();
-				while(!this.estUnEntier(reponse))
+				boolean valide = false;
+				if(!reponse.trim().equals(""))
 				{
-					System.out.println("Vous devez entrer un nombre ! Veuillez resaisir le nombre de jeux de cartes :");
-					reponse = new String(scanner.nextLine());
+					if(Partie.estUnEntier(reponse))
+						if(this.verifierCompatibiliteNbCartesNbJoueurs(reponse))
+							valide = true;
 				}
-				this.optionsDeJeu[1] = reponse;			
+				else
+					valide = true;
+				while(!valide)
+				{
+					System.out.println("\nVous devez entrer un nombre et le nombre de jeux de cartes (comptant 54 cartes) doit au moins pouvoir servir chaque joueur. Veuillez resaisir le nombre de jeux de cartes :");
+					reponse = new String(scanner.nextLine());
+					if(!reponse.trim().equals(""))
+					{
+						if(Partie.estUnEntier(reponse))
+							if(this.verifierCompatibiliteNbCartesNbJoueurs(reponse))
+								valide = true;
+					}
+					else
+						valide = true;								
+				}
+				if(!reponse.trim().equals(""))
+					this.optionsDeJeu[1] = reponse;			
 				break;
 			case "3" : 
 				texte.append("\nParamètres > Système de points");
@@ -283,16 +346,34 @@ public class Jeu
 				reponse = scanner.nextLine();
 				while(!(reponse).equals("Y") && !(reponse).equals("N"))
 				{
-					System.out.println("Vous devez choisir entre [Y] et [N]. Veuillez resaisir votre réponse :");
+					texte.append("\nVous devez choisir entre [Y] et [N]. Veuillez resaisir votre réponse :");
+					System.out.println(texte.toString());
 					reponse = new String(scanner.nextLine());
 				}
 				this.optionsDeJeu[2] = reponse;
 				if(reponse.equals("Y"))
-					System.out.println("Le système de points est désormais activé !\n");
+					texte.append("\nLe système de points est désormais activé !\n");
 				else
-					System.out.println("Le système de points est désormais désactivé !\n");
+					texte.append("\nLe système de points est désormais désactivé !\n");
+				System.out.println(texte.toString());
 				break;
 		}
+	}
+	
+	public boolean verifierCompatibiliteNbJoueursNbCartes(String nombreJoueurs)
+	{
+		if((Integer.parseInt(nombreJoueurs) * 8) - (54 * Integer.parseInt(this.optionsDeJeu[1])) < 0)
+			return(true);
+		else
+			return(false);
+	}
+	
+	public boolean verifierCompatibiliteNbCartesNbJoueurs(String nombreJeuxDeCartes)
+	{
+		if((Integer.parseInt(nombreJeuxDeCartes) * 54) - (8 * Integer.parseInt(this.optionsDeJeu[0])) > 0)
+			return(true);
+		else
+			return(false);
 	}
 	
 	//getters and setters	

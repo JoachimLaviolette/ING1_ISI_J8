@@ -1,7 +1,11 @@
 public class IAConfirme implements StrategieDeJeu
 {
-	public IAConfirme()
-	{}
+	private JoueurVirtuel bot;
+	
+	public IAConfirme(JoueurVirtuel botUtilisateur)
+	{
+		this.bot = botUtilisateur;
+	}
 	
 	public boolean jouer(Carte carteAJouer) 
 	{
@@ -26,5 +30,10 @@ public class IAConfirme implements StrategieDeJeu
 	public String choisirCarteSupplement() 
 	{
 		return null;
+	}
+	
+	public String proposerAjouterCarte()
+	{
+		return("Y");
 	}
 }

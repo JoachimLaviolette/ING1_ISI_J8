@@ -34,49 +34,51 @@ public class JoueurConcret extends Joueur
 		texte.append("4) Variante 5\n");
 		System.out.println(texte.toString());
 		reponse = scanner.nextInt();
-		while((reponse != 1 && reponse != 2 && reponse != 3 && reponse != 4) || (!this.getPartieEnCours().estUnEntier(reponse + "")))
+		while((reponse != 1 && reponse != 2 && reponse != 3 && reponse != 4) || (!Partie.estUnEntier(reponse + "")))
 		{
-			System.out.println("Vous devez choisir une des propositions (un nombre compris entre [1, 2, 3 et 4]). Veuillez resaisir une variante :");
+			System.out.println("Vous devez choisir une des propositions (un nombre compris entre [1 et 4]). Veuillez resaisir une variante :");
 			reponse = scanner.nextInt();
 		}
 		return(reponse);	
 	}	
 	
 	//overridden methods	
-	public boolean jouer(Carte carteAJouer)
-	{
-		boolean resultat = this.partieEnCours.jouerCarte(carteAJouer);
-		if(resultat)
-		{
-			this.main.remove(carteAJouer);
-			return(true);
-		}
-		else //make the player pick a card
-		{
-			System.out.println("Vous avez joué une mauvaise carte. Vous devez piocher.\n");
-			this.piocher();
-			return(false);
-		}
-		//if error (see with future exceptions), return false
-	}
-	
 	public int choisirAction()
 	{
 		Scanner scanner = new Scanner(System.in);
 		StringBuffer texte = new StringBuffer();
-		int reponse;
+		String reponse;
 		texte.append(this.pseudo + ", veuillez choisir une action à exécuter :\n");
 		texte.append("1) Jouer\n");
 		texte.append("2) Piocher\n");
-		texte.append("3) Changer de variante\n");
-		System.out.println(texte.toString());
-		reponse = scanner.nextInt();
-		while((reponse != 1 && reponse != 2 && reponse != 3) || (!this.getPartieEnCours().estUnEntier(reponse + "")))
+		texte.append("3) Changer de variante\n\n");		
+		texte.append("             [Vous : " + this.main.size() + " cartes]\n");
+		for(int x = 0 ; x < this.adversaires.size() ; x++)
 		{
-			System.out.println("Vous devez choisir une des propositions (un nombre compris entre [1, 2 et 3]). Veuillez resaisir une action :");
-			reponse = scanner.nextInt();
+			Joueur adversaireX = this.adversaires.get(x);
+			texte.append("             [" + adversaireX.getPseudo() + " : " + adversaireX.getMain().size() + " cartes]");
+			if(this.joueurSuivant.equals(adversaireX))
+				texte.append(" [joueur suivant]");
+			texte.append("\n");
 		}
-		return(reponse);		
+		System.out.println(texte.toString());
+		reponse = scanner.nextLine();
+		boolean valide = false;
+		while(!valide)
+		{
+			if(Partie.estUnEntier(reponse))
+			{
+				if(Integer.parseInt(reponse) == 1 || Integer.parseInt(reponse) == 2 || Integer.parseInt(reponse) == 3)
+					valide = true;
+			}
+			else
+			{
+				valide = false;
+				System.out.println("Vous devez choisir une des propositions (1, 2 ou 3). Veuillez resaisir une action à effectuer :");
+				reponse = scanner.nextLine();
+			}
+		}
+		return(Integer.parseInt(reponse));	
 	}
 	
 	public Carte choisirCarte()
@@ -96,7 +98,7 @@ public class JoueurConcret extends Joueur
 				System.out.println("Vous devez saisir une valeur ! Allez-y :");
 				reponse = new String(scanner.nextLine());
 			}	
-			while(!this.getPartieEnCours().estUnEntier(reponse))
+			while(!Partie.estUnEntier(reponse))
 			{
 				System.out.println("Vous devez entrez un nombre pour indiquer quelle carte choisir ! Allez-y :");
 				reponse = new String(scanner.nextLine());
@@ -125,7 +127,7 @@ public class JoueurConcret extends Joueur
 		reponse = scanner.nextInt();
 		while(reponse > 4 && reponse < 1)
 		{
-			System.out.println("Vous devez choisir une réponse entre 1 et 4. Veuillez resaisir votre réponse :");
+			System.out.println("Vous devez choisir une réponse entre [1 et 4]. Veuillez resaisir votre réponse :");
 			reponse = scanner.nextInt();
 		}		
 		switch(reponse)
@@ -150,7 +152,7 @@ public class JoueurConcret extends Joueur
 		reponse = scanner.nextLine();
 		if(!reponse.trim().equals(""))
 		{
-			while(!this.getPartieEnCours().estUnEntier(reponse) || (Integer.parseInt(reponse) > this.main.size() || Integer.parseInt(reponse) < 0))
+			while(!Partie.estUnEntier(reponse) || (Integer.parseInt(reponse) > this.main.size() || Integer.parseInt(reponse) < 0))
 			{
 				if(!reponse.trim().equals(""))
 				{
@@ -165,5 +167,21 @@ public class JoueurConcret extends Joueur
 			return(reponse);
 		else
 			return(Integer.parseInt(reponse) - 1 + "");
+	}
+	
+	public String proposerAjouterCarte()
+	{
+		Scanner scanner = new Scanner(System.in);
+		StringBuffer texte = new StringBuffer();
+		String reponse = new String();
+		texte.append("\nSouhaitez-vous jouer une autre carte en supplément ? [Y/N]\n");
+		System.out.println(texte.toString());
+		reponse = scanner.nextLine();
+		while(!(reponse).equals("Y") && !(reponse).equals("N"))
+		{
+			System.out.println("Vous devez choisir entre [Y] et [N]. Veuillez resaisir votre réponse :\n");
+			reponse = new String(scanner.nextLine());
+		}
+		return(reponse);
 	}
 }

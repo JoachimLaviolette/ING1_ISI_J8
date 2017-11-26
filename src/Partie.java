@@ -45,7 +45,10 @@ public class Partie
 			// ....
 			
 			while(this.verifierNombreCartesJoueurs())
+			{
 				this.jouerTour();
+				System.out.println("\n--------------------------------------------------------------------------------");
+			}
 			this.annoncerFinDePartie();
 		}			
 	}
@@ -60,7 +63,6 @@ public class Partie
 					this.joueurGagnant = (Joueur)this.joueursDeLaPartie.toArray()[x];
 				if(!this.joueursAyantFini.contains((Joueur)this.joueursDeLaPartie.toArray()[x]))
 				{
-					this.joueursAyantFini.add((Joueur)this.joueursDeLaPartie.toArray()[x]);
 					//remove the player from the opponents list of other players
 					Joueur joueurAEnlever = (Joueur)this.joueursDeLaPartie.toArray()[x];
 					Iterator<Joueur> iteAdversaireX = ((Joueur)this.joueursDeLaPartie.toArray()[x]).getAdversaires().iterator();
@@ -71,7 +73,12 @@ public class Partie
 						adversaireX.getAdversaires().remove(joueurAEnlever);
 					}
 					//reset de next and previous players for all others players
-					//((Joueur)this.joueursDeLaPartie.toArray()[x]).set
+					Joueur joueurAyantFini = (Joueur)this.joueursDeLaPartie.toArray()[x];
+					Joueur predecesseurJAF = joueurAyantFini.getJoueurPrecedent();
+					joueurAyantFini.getJoueurPrecedent().setJoueurSuivant(joueurAyantFini.getJoueurSuivant());
+					joueurAyantFini.getJoueurSuivant().setJoueurPrecedent(predecesseurJAF);
+					//add the player to the list of those who finished -- WARNING : keep in the game's players list
+					this.joueursAyantFini.add((Joueur)this.joueursDeLaPartie.toArray()[x]);
 				}
 			}
 		}
@@ -82,41 +89,45 @@ public class Partie
 	
 	public void jouerTour()
 	{
+		this.afficherCarteTalon();
 		int action = this.joueurActif.choisirAction();
 		switch(action)
 		{
 			case 1 : 
-				this.afficherCarteTalon();
 				LinkedList<Carte> cartesAJouer = new LinkedList<Carte>();
 				String reponse = "Y", reponseX = "x";
 				int indexCarte;
 				Carte carteChoisie;
 				boolean aJoue;
-				carteChoisie = this.joueurActif.choisirCarte();
-				cartesAJouer.add(carteChoisie);
+				carteChoisie = this.joueurActif.choisirCarte();				
 				aJoue = this.joueurActif.jouer(carteChoisie);
 				if(aJoue)
-					reponse = this.proposerChoixPlusieursCartes();
+				{
+					cartesAJouer.add(carteChoisie);
+					reponse = this.proposerChoixPlusieursCartes();					
+				}
 				else
 					reponse = "N";
 				while(reponse.trim().equals("Y"))
 				{
-					this.afficherCarteTalon();
-					reponseX = this.joueurActif.choisirCarteSupplement();
+					if(this.joueurActif instanceof JoueurConcret)
+						reponseX = ((JoueurConcret)this.joueurActif).choisirCarteSupplement();
+					else
+						reponseX = ((JoueurVirtuel)this.joueurActif).choisirCarteSupplement();
 					if(!reponseX.trim().equals(""))
 					{
-						while(!this.estUnEntier(reponseX))
+						while(!Partie.estUnEntier(reponseX))
 						{
 							System.out.println("Vous devez entrer un nombre pour indiquer quelle carte choisir ! Allez-y :\n");
-							reponseX = this.joueurActif.choisirCarteSupplement();
+							reponseX = ((JoueurConcret)this.joueurActif).choisirCarteSupplement();
 						}
 						indexCarte = Integer.parseInt(reponseX);
 						carteChoisie = (Carte)this.joueurActif.getMain().toArray()[indexCarte];	
-						if(!this.combinaisonAutorisee(this.getDerniereCarte(cartesAJouer).getValeur(), (carteChoisie.getValeur())))
+						if(!this.combinaisonAutorisee(this.getDerniereCarte(cartesAJouer).getValeur(), carteChoisie.getValeur()))
 							while(!this.getDerniereCarte(cartesAJouer).getValeur().equals(carteChoisie.getValeur()))
 							{
-								System.out.println("La carte indiquée ne peut pas être combinée avec la première renseignée (deux valeurs différentes !). Veuillez en choisir une autre :\n");
-								reponseX = this.joueurActif.choisirCarteSupplement();
+								System.out.println("La carte indiquée ne peut pas être combinée avec la première renseignée (deux valeurs différentes).\nVeuillez en choisir une autre :\n");
+								reponseX = ((JoueurConcret)this.joueurActif).choisirCarteSupplement();
 								if(!reponseX.trim().equals(""))
 								{
 									indexCarte = Integer.parseInt(reponseX);
@@ -129,7 +140,10 @@ public class Partie
 					if(!reponseX.trim().equals(""))
 					{
 						cartesAJouer.add(carteChoisie);
+						this.joueurActif.jouer(carteChoisie);
 						reponse = this.proposerChoixPlusieursCartes();
+						if(reponse.equals("Y"))
+							this.afficherCarteTalon();
 					}
 					else
 						reponse = "N";
@@ -177,25 +191,15 @@ public class Partie
 	
 	public String proposerChoixPlusieursCartes()
 	{
-		Scanner scanner = new Scanner(System.in);
-		StringBuffer texte = new StringBuffer();
-		String reponse = new String();
-		texte.append("\nSouhaitez-vous jouer une autre carte en supplément ? [Y/N]\n");
-		System.out.println(texte.toString());
-		reponse = scanner.nextLine();
-		while(!(reponse).equals("Y") && !(reponse).equals("N"))
-		{
-			System.out.println("Vous devez choisir entre [Y] et [N]. Veuillez resaisir votre réponse :\n");
-			reponse = new String(scanner.nextLine());
-		}
-		return(reponse);
+		return(this.joueurActif.proposerAjouterCarte());
+		
 	}	
 	
 	private void afficherCarteTalon()
 	{
 		StringBuffer texte = new StringBuffer();
 		texte.append("\n>> Carte du talon --> " + this.getDerniereCarte(this.talon).toString() + " <<\n");
-		if(this.varianteCourante.getCarteDemandee() != null)
+		if(this.varianteCourante.getCarteDemandee() != null && this.varianteCourante.getCarteEnMemoire().getValeur().equals(Valeur.HUIT))
 			texte.append("Le précédent joueur a joué un 8 et a demandé de jouer du " + this.varianteCourante.getCarteDemandee().getSymbole() +"\n");
 		System.out.println(texte.toString());
 	}
@@ -296,16 +300,18 @@ public class Partie
 	public void annoncerFinDePartie()
 	{
 		StringBuffer texte = new StringBuffer();
-		texte.append("\n------------- VICTOIRE -------------\n");
-		texte.append("La partie est terminée ! Le gagnant est... " + this.joueurGagnant.getPseudo() + "! Félicitations à toi !\n)");
-		texte.append(">>               [Appuyez sur entrée pour revenir au menu principal] <<");
+		texte.append("--------------------------------------------------------------------------------");
+		texte.append("\n                               ::: VICTOIRE :::                                 ");
+		texte.append("\n--------------------------------------------------------------------------------");
+		texte.append("\nLa partie est terminée !\nLe gagnant est... " + this.joueurGagnant.getPseudo() + " !\nFélicitations à toi !\n");
+		texte.append("\n                       [Appuyer sur la touche entrée pour continuer]");
+		System.out.println(texte.toString());
 		Scanner scanner = new Scanner(System.in);
 		scanner.nextLine();
-		scanner.close();
 		this.instanceDeJeu.demarrer();
 	}
 	
-	public boolean estUnEntier(String valeur)
+	public static boolean estUnEntier(String valeur)
 	{
 		try
 		{

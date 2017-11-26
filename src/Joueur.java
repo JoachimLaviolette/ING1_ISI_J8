@@ -33,6 +33,23 @@ public abstract class Joueur
 			this.annonceCarte = false;
 		}
 	}
+	
+	public boolean jouer(Carte carteAJouer)
+	{
+		boolean resultat = this.partieEnCours.jouerCarte(carteAJouer);
+		if(resultat)
+		{
+			this.main.remove(carteAJouer);
+			return(true);
+		}
+		else //make the player pick a card
+		{
+			System.out.println(this.pseudo + " a joué une mauvaise carte et a du pioché.");
+			this.piocher();
+			return(false);
+		}
+		//if error (see with future exceptions), return false
+	}
 		
 	public boolean piocher()
 	{
@@ -55,11 +72,11 @@ public abstract class Joueur
 	}
 	
 	//abstract methods 
-	public abstract boolean jouer(Carte carteAJouer);
 	public abstract int choisirAction();	
 	public abstract Carte choisirCarte();
 	public abstract Carte choisirCarteApresHuit();
-	public abstract String choisirCarteSupplement();	
+	public abstract String choisirCarteSupplement();
+	public abstract String proposerAjouterCarte();
 		
 	//getters and setters
 	public Partie getPartieEnCours() 
