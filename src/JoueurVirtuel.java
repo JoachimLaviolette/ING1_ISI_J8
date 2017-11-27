@@ -13,6 +13,7 @@ public class JoueurVirtuel extends Joueur
 	public int choisirAction() 
 	{
 		int action = this.strategieCourante.choisirAction();
+		System.out.println("                                                  " + this.partieEnCours.getInfosPaquets());
 		if(action == 1)
 			System.out.println(this.pseudo + " a choisi de jouer");
 		else
@@ -27,10 +28,17 @@ public class JoueurVirtuel extends Joueur
 		return(carteChoisie);
 	}
 
-	public Carte choisirCarteApresHuit() 
+	public Carte choisirSymboleCarteApresHuit() 
 	{
-		Carte carteDemandee = this.strategieCourante.choisirCarteApresHuit();
-		System.out.println(this.pseudo + " a choisi le symbole a jouer.");
+		Carte carteDemandee = this.strategieCourante.choisirSymboleCarteApresHuit();
+		System.out.println(this.pseudo + " a choisi le symbole à jouer.");
+		return(carteDemandee);
+	}
+	
+	public Carte choisirCouleurCarteApresHuit() 
+	{
+		Carte carteDemandee = this.strategieCourante.choisirCouleurCarteApresHuit();
+		System.out.println(this.pseudo + " a choisi la couleur à jouer.");
 		return(carteDemandee);
 	}
 

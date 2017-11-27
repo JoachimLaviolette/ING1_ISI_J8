@@ -1,8 +1,8 @@
 import java.util.*;
 
-public class VarianteMonclar extends VarianteAMultiplicateurs
-{
-	public VarianteMonclar(Partie partieAssociee) 
+public class VariantePerso extends VarianteAMultiplicateurs
+{	
+	public VariantePerso(Partie partieAssociee) 
 	{
 		super(partieAssociee);
 	}
@@ -13,22 +13,24 @@ public class VarianteMonclar extends VarianteAMultiplicateurs
 		{	
 			if(cartesAJouer.get(indexCarte).getValeur().equals(Valeur.AS))
 			{			
-				this.multiplicateurDePioche += 3;
+				this.multiplicateurDePioche += 2;
 				this.carteEnMemoire = cartesAJouer.get(indexCarte);
 				this.carteDemandee = null;
 				System.out.println("carte mise en mémoire : " + this.carteEnMemoire.toString());			
 			}
 			else if(cartesAJouer.get(indexCarte).getValeur().equals(Valeur.JOKER))
-			{	
+			{
+				this.multiplicateurDePioche += 5;
 				this.carteEnMemoire = cartesAJouer.get(indexCarte);
-				System.out.println("carte mise en mémoire : " + this.carteEnMemoire.toString());	
+				this.carteDemandee = null;
+				System.out.println("carte mise en mémoire : " + this.carteEnMemoire.toString());
 			}
 			else if(cartesAJouer.get(indexCarte).getValeur().equals(Valeur.HUIT))
 			{
 				this.multiplicateurDePioche = 0;
 				if(indexCarte == 0)
 				{
-					this.carteDemandee = this.partieAssociee.demanderCouleurCarteJoueur();
+					this.carteDemandee = this.partieAssociee.demanderSymboleCarteJoueur();
 					System.out.println("[carte demandée : " + this.carteDemandee.toString() + "]");
 				}
 					this.carteEnMemoire = cartesAJouer.get(indexCarte);
@@ -78,30 +80,28 @@ public class VarianteMonclar extends VarianteAMultiplicateurs
 			}			
 		}
 		joueurCarte.terminerTour();
-	}		
+	}	
 	
 	public boolean verifierConformiteCarte(Carte carteAJouer) 
 	{
-		if(carteAJouer.getValeur().equals(Valeur.JOKER))
+		if(carteAJouer.getValeur().equals(Valeur.JOKER) || carteAJouer.getValeur().equals(Valeur.HUIT))
 			return(true);
 		else
 		{
 			if(this.carteEnMemoire == null)	
 			{
-				if(carteAJouer.getSymbole().equals(this.partieAssociee.getDerniereCarte(this.partieAssociee.getTalon()).getSymbole()) || carteAJouer.getValeur().equals(this.partieAssociee.getDerniereCarte(this.partieAssociee.getTalon()).getValeur()))
-					return(true);	
+				if(this.partieAssociee.getDerniereCarte(this.partieAssociee.getTalon()).getValeur().equals(Valeur.JOKER))
+					return(true);
+				else 
+					if(carteAJouer.getSymbole().equals(this.partieAssociee.getDerniereCarte(this.partieAssociee.getTalon()).getSymbole()) || carteAJouer.getValeur().equals(this.partieAssociee.getDerniereCarte(this.partieAssociee.getTalon()).getValeur()))
+						return(true);
 			}
 			else
-			{				
+			{
 				Carte cartePrecedente = this.carteEnMemoire;
-				if(cartePrecedente.getValeur().equals(Valeur.JOKER))
+				if(cartePrecedente.getValeur().equals(Valeur.HUIT))
 				{
-					this.carteEnMemoire = null;
-					return(true);
-				}
-				else if(cartePrecedente.getValeur().equals(Valeur.HUIT))
-				{
-					if(carteAJouer.getCouleur().equals(this.carteDemandee.getCouleur()))
+					if(carteAJouer.getSymbole().equals(this.carteDemandee.getSymbole()))
 					{
 						this.carteDemandee = null;
 						this.carteEnMemoire = null;
@@ -110,19 +110,14 @@ public class VarianteMonclar extends VarianteAMultiplicateurs
 				}
 				else if(cartePrecedente.getValeur().equals(Valeur.AS))
 				{
-					if(carteAJouer.getValeur().equals(Valeur.AS))
+					if(carteAJouer.getValeur().equals(Valeur.AS))			
 						return(true);
-					else if(carteAJouer.getValeur().equals(Valeur.HUIT))
-					{
-						this.carteEnMemoire = null;
-						return(true);
-					}
 				}
 				//else
 				//error, see with exceptions
 				//a non-special card has been saved when it shouldn't had to
-			}
+			}			
 		}
 		return(false);
-	}
+	}	
 }

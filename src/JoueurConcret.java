@@ -32,11 +32,13 @@ public class JoueurConcret extends Joueur
 		texte.append("2) Variante Monclar\n");
 		texte.append("3) Variante 4\n");
 		texte.append("4) Variante 5\n");
+		texte.append("5) Variante Personnalisée\n");
 		System.out.println(texte.toString());
 		reponse = scanner.nextInt();
-		while((reponse != 1 && reponse != 2 && reponse != 3 && reponse != 4) || (!Partie.estUnEntier(reponse + "")))
+		while((reponse != 1 && reponse != 2 && reponse != 3 && reponse != 4 && reponse != 5) || (!Partie.estUnEntier(reponse + "")))
 		{
-			System.out.println("Vous devez choisir une des propositions (un nombre compris entre [1 et 4]). Veuillez resaisir une variante :");
+			texte.append("Vous devez choisir une des propositions (un nombre compris entre [1 et 5]). Veuillez resaisir une variante :");
+			System.out.println(texte.toString());
 			reponse = scanner.nextInt();
 		}
 		return(reponse);	
@@ -52,7 +54,8 @@ public class JoueurConcret extends Joueur
 		texte.append("1) Jouer\n");
 		texte.append("2) Piocher\n");
 		texte.append("3) Changer de variante\n\n");		
-		texte.append("             [Vous : " + this.main.size() + " cartes]\n");
+		texte.append(this.partieEnCours.getInfosMainJoueur());
+		texte.append(this.partieEnCours.getInfosPaquets());
 		for(int x = 0 ; x < this.adversaires.size() ; x++)
 		{
 			Joueur adversaireX = this.adversaires.get(x);
@@ -63,20 +66,10 @@ public class JoueurConcret extends Joueur
 		}
 		System.out.println(texte.toString());
 		reponse = scanner.nextLine();
-		boolean valide = false;
-		while(!valide)
+		while(!(!reponse.trim().equals("") && (Partie.estUnEntier(reponse)) && (Integer.parseInt(reponse) <= 3 && Integer.parseInt(reponse) >= 1)))
 		{
-			if(Partie.estUnEntier(reponse))
-			{
-				if(Integer.parseInt(reponse) == 1 || Integer.parseInt(reponse) == 2 || Integer.parseInt(reponse) == 3)
-					valide = true;
-			}
-			else
-			{
-				valide = false;
-				System.out.println("Vous devez choisir une des propositions (1, 2 ou 3). Veuillez resaisir une action à effectuer :");
-				reponse = scanner.nextLine();
-			}
+			System.out.println("Veuillez choisir une des trois actions proposées :");
+			reponse = scanner.nextLine();
 		}
 		return(Integer.parseInt(reponse));	
 	}
@@ -91,28 +84,15 @@ public class JoueurConcret extends Joueur
 			texte.append((x+1) + ") " + ((Carte)this.main.toArray()[x]).toString() + "\n");
 		System.out.println(texte.toString());
 		reponse = scanner.nextLine();
-		while(reponse.trim().equals(""))
+		while(!(!reponse.trim().equals("") && (Partie.estUnEntier(reponse)) && (Integer.parseInt(reponse) <= this.main.size() && Integer.parseInt(reponse) >= 1)))
 		{
-			while(reponse.trim().equals(""))
-			{
-				System.out.println("Vous devez saisir une valeur ! Allez-y :");
-				reponse = new String(scanner.nextLine());
-			}	
-			while(!Partie.estUnEntier(reponse))
-			{
-				System.out.println("Vous devez entrez un nombre pour indiquer quelle carte choisir ! Allez-y :");
-				reponse = new String(scanner.nextLine());
-			}
-			while(Integer.parseInt(reponse) > this.main.size() || Integer.parseInt(reponse) < 0)
-			{	
-				System.out.println("Vous devez sélectionner un indice de carte proposé ! Veuillez saisir une carte :");
-				reponse = new String(scanner.nextLine());
-			}
+			System.out.println("Veuillez choisir une carte de la liste :");
+			reponse = scanner.nextLine();
 		}
 		return((Carte)(this.main.toArray()[Integer.parseInt(reponse) - 1]));
 	}
 	
-	public Carte choisirCarteApresHuit()
+	public Carte choisirSymboleCarteApresHuit()
 	{
 		Scanner scanner = new Scanner(System.in);
 		StringBuffer texte = new StringBuffer();
@@ -140,6 +120,30 @@ public class JoueurConcret extends Joueur
 		return(carte);
 	}
 	
+	public Carte choisirCouleurCarteApresHuit()
+	{
+		Scanner scanner = new Scanner(System.in);
+		StringBuffer texte = new StringBuffer();
+		int reponse;
+		Carte carte = null;
+		texte.append("\nVeuillez choisir la couleur que vous souhaitez que l'on joue par la suite :\n");
+		texte.append("1) Rouge\n");
+		texte.append("2) Noire\n");
+		System.out.println(texte.toString());
+		reponse = scanner.nextInt();
+		while(reponse > 2 && reponse < 1)
+		{
+			System.out.println("Vous devez choisir une réponse entre [1 et 2]. Veuillez resaisir votre réponse :");
+			reponse = scanner.nextInt();
+		}		
+		switch(reponse)
+		{
+			case 1 : carte = new Carte(null, null, Couleur.ROUGE); break;
+			case 2 : carte = new Carte(null, null, Couleur.NOIRE); break;	
+		}
+		return(carte);
+	}
+	
 	public String choisirCarteSupplement()
 	{
 		Scanner scanner = new Scanner(System.in);
@@ -150,19 +154,11 @@ public class JoueurConcret extends Joueur
 			texte.append((x+1) + ") " + ((Carte)this.main.toArray()[x]).toString() + "\n");
 		System.out.println(texte.toString());
 		reponse = scanner.nextLine();
-		if(!reponse.trim().equals(""))
+		while(!(Partie.estUnEntier(reponse) && (Integer.parseInt(reponse) <= this.main.size() && Integer.parseInt(reponse) >= 1)) && !(reponse.trim().equals("")))
 		{
-			while(!Partie.estUnEntier(reponse) || (Integer.parseInt(reponse) > this.main.size() || Integer.parseInt(reponse) < 0))
-			{
-				if(!reponse.trim().equals(""))
-				{
-					System.out.println("Vous devez choisir une des propositions de cartes ! Veuillez resaisir une carte :");
-					reponse = new String(scanner.nextLine());
-				}
-				else
-					break;
-			}
-		}
+			System.out.println("Veuillez choisir une carte de la liste :\n[Appuyez sur la touche entrée pour continuer sans ajouter de carte]");
+			reponse = scanner.nextLine();
+		}		
 		if(reponse.trim().equals(""))
 			return(reponse);
 		else

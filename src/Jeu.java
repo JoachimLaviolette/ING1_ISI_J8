@@ -44,44 +44,39 @@ public class Jeu
 		Scanner scanner = new Scanner(System.in);
 		StringBuffer texte = new StringBuffer();
 		String reponse;
-		texte.append("\n------------- BIENVENUE DANS LE J8-2017 v1.0 -------------\n::::::::::::::::::::: MENU PRINCIPAL :::::::::::::::::::::\n");
-		texte.append("\n1) Jouer une partie\n");
+		texte.append("\n------------- BIENVENUE DANS LE J8-2017 v1.0 -------------\n::::::::::::::::::::: MENU PRINCIPAL :::::::::::::::::::::\n\n");
+		texte.append("1) Jouer une partie\n");
 		texte.append("2) Paramètres");
 		System.out.println(texte.toString());
 		reponse = scanner.nextLine();
-		boolean valide = false;
-		while(!valide)
+		while(!(!reponse.trim().equals("") && (Partie.estUnEntier(reponse)) && (Integer.parseInt(reponse) <= 2 && Integer.parseInt(reponse) >= 1)))
 		{
-			if(Partie.estUnEntier(reponse))
-			{
-				if(Integer.parseInt(reponse) == 1 || Integer.parseInt(reponse) == 2)
-					valide = true;
-			}
-			else
-			{
-				valide = false;
-				System.out.println("Vous devez choisir une des propositions (1 ou 2). Veuillez resaisir une action à effectuer :");
-				reponse = scanner.nextLine();
-			}
-		}
+			System.out.println("Veuillez choisir une des deux actions du menu :");
+			reponse = scanner.nextLine();
+		}		
 		return(Integer.parseInt(reponse));
 	}
 	
 	public Variante choisirVariante()
 	{
 		String choixVariante = this.selectionnerVariante();
+		Variante varianteChoisie;		
 		switch(choixVariante)
 		{
 			case "1" : 
-				return(new VarianteMinimale(this.partieDeJeu));
+				varianteChoisie = new VarianteMinimale(this.partieDeJeu); break;
 			case "2" : 
-				return(new VarianteMonclar(this.partieDeJeu));
+				varianteChoisie = new VarianteMonclar(this.partieDeJeu); break;
 			case "3" : 
-				return(new Variante4(this.partieDeJeu));
+				varianteChoisie = new Variante4(this.partieDeJeu); break;
 			case "4" : 
-				return(new Variante5(this.partieDeJeu));
-			default : return(new VarianteMinimale(this.partieDeJeu));
+				varianteChoisie = new Variante5(this.partieDeJeu); break;
+			case "5" : 
+				varianteChoisie = new VariantePerso(this.partieDeJeu); break;
+			default : 
+				varianteChoisie = new VarianteMinimale(this.partieDeJeu); break;
 		}
+		return(varianteChoisie);
 	}
 	
 	public void enregistrerNiveauBot(JoueurVirtuel bot)
@@ -149,6 +144,7 @@ public class Jeu
 		texte.append("2) Variante Monclar\n");
 		texte.append("3) Variante 4\n");
 		texte.append("4) Variante 5\n");
+		texte.append("5) Variante Personnalisée\n\n");
 		texte.append("                       [Appuyer sur la touche entrée pour continuer]");
 		System.out.println(texte.toString());
 		reponse = scanner.nextLine();
@@ -156,13 +152,26 @@ public class Jeu
 			return("1");
 		else
 		{
-			while(!reponse.equals("1") && !reponse.equals("2") && !reponse.equals("3") && !reponse.equals("4"))
+			while(!reponse.equals("1") && !reponse.equals("2") && !reponse.equals("3") && !reponse.equals("4") && !reponse.equals("5"))
 			{
-				System.out.println("Vous devez choisir une des propositions ! Veuillez resaisir la variante :");
+				System.out.println("Vous devez choisir une des propositions (un nombre entre [1 et 5]).\nVeuillez resaisir la variante :");
 				reponse = new String(scanner.nextLine());
-			}			
-			return(reponse);		
+			}					
 		}
+		texte = new StringBuffer("\nLa variante ");
+		if(reponse.equals("1"))
+			texte.append("Minimale");
+		else if(reponse.equals("2"))
+			texte.append("Monclar");
+		else if(reponse.equals("3"))
+			texte.append("4");
+		else if(reponse.equals("4"))
+			texte.append("5");
+		else
+			texte.append("Personnalisée");
+		texte.append(" a été choisie.\n");
+		System.out.println(texte.toString());	
+		return(reponse);
 	}
 	
 	public HashSet<Joueur> enregistrerJoueurs()
@@ -387,5 +396,4 @@ public class Jeu
 	{
 		new Jeu().demarrer();
 	}
-
 }

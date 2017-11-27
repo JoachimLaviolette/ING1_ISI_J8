@@ -22,7 +22,12 @@ public class IAConfirme implements StrategieDeJeu
 		return null;
 	}
 
-	public Carte choisirCarteApresHuit() 
+	public Carte choisirSymboleCarteApresHuit() 
+	{
+		return null;
+	}
+	
+	public Carte choisirCouleurCarteApresHuit() 
 	{
 		return null;
 	}

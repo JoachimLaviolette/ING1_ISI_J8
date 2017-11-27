@@ -47,7 +47,7 @@ public class Partie
 			while(this.verifierNombreCartesJoueurs())
 			{
 				this.jouerTour();
-				System.out.println("\n--------------------------------------------------------------------------------");
+				System.out.println("\n-------------------------------------------------------------------------------------------");
 			}
 			this.annoncerFinDePartie();
 		}			
@@ -118,7 +118,7 @@ public class Partie
 					{
 						while(!Partie.estUnEntier(reponseX))
 						{
-							System.out.println("Vous devez entrer un nombre pour indiquer quelle carte choisir ! Allez-y :\n");
+							System.out.println("Veuillez indiquer quelle carte choisir :");
 							reponseX = ((JoueurConcret)this.joueurActif).choisirCarteSupplement();
 						}
 						indexCarte = Integer.parseInt(reponseX);
@@ -158,9 +158,8 @@ public class Partie
 					this.joueurActif.terminerTour();
 				break;
 			case 2 : 
-				boolean aPioche = this.joueurActif.piocher(); 
-				if(aPioche)
-					this.joueurActif.terminerTour();
+				this.joueurActif.piocher();
+				this.joueurActif.terminerTour();
 				break;
 			case 3 : 
 				if(this.joueurActif instanceof JoueurConcret)
@@ -181,6 +180,12 @@ public class Partie
 						case 4 : 
 							varianteChoisie = new Variante5(instance);
 							break;
+						case 5 : 
+							varianteChoisie = new VariantePerso(instance);
+							break;
+						default:
+							varianteChoisie = this.varianteCourante;
+							break;
 					}
 					((JoueurConcret)this.joueurActif).changerVariante(varianteChoisie);
 					//see what to do here, if we have to re-launch the game or not
@@ -191,17 +196,39 @@ public class Partie
 	
 	public String proposerChoixPlusieursCartes()
 	{
-		return(this.joueurActif.proposerAjouterCarte());
-		
+		return(this.joueurActif.proposerAjouterCarte());		
 	}	
 	
 	private void afficherCarteTalon()
 	{
 		StringBuffer texte = new StringBuffer();
 		texte.append("\n>> Carte du talon --> " + this.getDerniereCarte(this.talon).toString() + " <<\n");
-		if(this.varianteCourante.getCarteDemandee() != null && this.varianteCourante.getCarteEnMemoire().getValeur().equals(Valeur.HUIT))
-			texte.append("Le précédent joueur a joué un 8 et a demandé de jouer du " + this.varianteCourante.getCarteDemandee().getSymbole() +"\n");
+		texte.append(this.varianteCourante.afficherCarteDemandee());
 		System.out.println(texte.toString());
+	}
+	
+	public String getInfosMainJoueur()
+	{
+		StringBuffer texte = new StringBuffer("");
+		texte.append("             [Vous : " + this.joueurActif.getMain().size() + " carte");
+		if(this.joueurActif.getMain().size() > 1)
+			texte.append("s");
+		texte.append("]                    ");
+		return(texte.toString());
+	}	
+	
+	public String getInfosPaquets()
+	{
+		StringBuffer texte = new StringBuffer("");
+		texte.append("[Pioche : " + this.pioche.size() + " carte");
+		if(this.pioche.size() > 1)
+			texte.append("s");
+		texte.append("] ");
+		texte.append("[Talon : " + this.talon.size() + " carte");
+		if(this.talon.size() > 1)
+			texte.append("s");
+		texte.append("]\n");
+		return(texte.toString());
 	}
 	
 	private boolean verifierConformiteCarte(Carte carteAJouer)
@@ -287,6 +314,18 @@ public class Partie
 			this.talon.removeAll(this.talon);
 			this.talon.add(premiereCarteTalon);
 		}
+	}	
+
+	public boolean peutEncorePiocher()
+	{
+		int nombreCartesPossedees = this.joueurActif.getMain().size();		
+		Iterator<Joueur> iteAdversaires = this.joueurActif.getAdversaires().iterator();
+		while(iteAdversaires.hasNext())
+			nombreCartesPossedees += iteAdversaires.next().getMain().size();
+		if(nombreCartesPossedees == 53 && this.pioche.isEmpty() && this.talon.size() == 1)
+			return(false);
+		else
+			return(true);
 	}
 	
 	public boolean combinaisonAutorisee(Valeur valeurCartePrecedente, Valeur valeurNouvelleCarte)
@@ -311,6 +350,18 @@ public class Partie
 		this.instanceDeJeu.demarrer();
 	}
 	
+	public JoueurConcret trouverJoueurConcret()
+	{
+		Iterator<Joueur> ite = this.joueursDeLaPartie.iterator();
+		while(ite.hasNext())
+		{
+			Joueur joueurX = ite.next();
+			if(joueurX instanceof JoueurConcret)
+				return((JoueurConcret)(joueurX));
+		}
+		return(null);
+	}
+	
 	public static boolean estUnEntier(String valeur)
 	{
 		try
@@ -324,22 +375,15 @@ public class Partie
 		return(true);
 	}
 
-	public Carte demanderCarteJoueur()
+	public Carte demanderSymboleCarteJoueur()
 	{
-		return(this.joueurActif.choisirCarteApresHuit());
+		return(this.joueurActif.choisirSymboleCarteApresHuit());
 	}
 	
-	public JoueurConcret trouverJoueurConcret()
+	public Carte demanderCouleurCarteJoueur()
 	{
-		Iterator<Joueur> ite = this.joueursDeLaPartie.iterator();
-		while(ite.hasNext())
-		{
-			Joueur joueurX = ite.next();
-			if(joueurX instanceof JoueurConcret)
-				return((JoueurConcret)(joueurX));
-		}
-		return(null);
-	}
+		return(this.joueurActif.choisirCouleurCarteApresHuit());
+	}	
 	
 	//getters and setters	
 	public Variante getVarianteCourante() 

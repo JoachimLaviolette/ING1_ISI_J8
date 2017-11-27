@@ -44,7 +44,7 @@ public abstract class Joueur
 		}
 		else //make the player pick a card
 		{
-			System.out.println(this.pseudo + " a joué une mauvaise carte et a du pioché.");
+			System.out.println(this.pseudo + " a joué une mauvaise carte.");
 			this.piocher();
 			return(false);
 		}
@@ -53,19 +53,30 @@ public abstract class Joueur
 		
 	public boolean piocher()
 	{
-		this.partieEnCours.verifierPioche();
-		int multiplicateurDePioche = this.partieEnCours.getVarianteCourante().verifierMultiplicateurPioche();
-		int x = 0;
-		do
+		if(this.partieEnCours.peutEncorePiocher())
 		{
-			this.main.add(this.partieEnCours.getDerniereCarte(this.partieEnCours.getPioche())); //take the last card of the game's pick and adds it to the player's deck
-			this.partieEnCours.getPioche().remove(this.partieEnCours.getDerniereCarte(this.partieEnCours.getPioche()));
-			x++;
-		} while (x < multiplicateurDePioche);
-		return(true);
-		//if a problem occurs, return false (see later with the exceptions)
+			this.partieEnCours.verifierPioche();
+			int x = 0;
+			int multiplicateurDePioche;
+			if(this.partieEnCours.getVarianteCourante() instanceof VarianteAMultiplicateurs)
+				multiplicateurDePioche = ((VarianteAMultiplicateurs)this.partieEnCours.getVarianteCourante()).verifierMultiplicateurPioche();
+			else
+				multiplicateurDePioche = 0;
+			do
+			{
+				this.main.add(this.partieEnCours.getDerniereCarte(this.partieEnCours.getPioche())); //take the last card of the game's pick and adds it to the player's deck
+				this.partieEnCours.getPioche().remove(this.partieEnCours.getDerniereCarte(this.partieEnCours.getPioche()));
+				x++;
+			} while (x < multiplicateurDePioche);
+			return(true);
+		}
+		else
+		{
+			System.out.println(this.pseudo + " n'a pas pu piocher car il ne reste qu'une carte sur le talon et la pioche est vide.");	
+			return(false);
+		}
 	}
-	
+		
 	public void terminerTour() //useful for the future GUI
 	{
 		this.partieEnCours.setJoueurActif(this.joueurSuivant);
@@ -74,7 +85,8 @@ public abstract class Joueur
 	//abstract methods 
 	public abstract int choisirAction();	
 	public abstract Carte choisirCarte();
-	public abstract Carte choisirCarteApresHuit();
+	public abstract Carte choisirCouleurCarteApresHuit();
+	public abstract Carte choisirSymboleCarteApresHuit();
 	public abstract String choisirCarteSupplement();
 	public abstract String proposerAjouterCarte();
 		
