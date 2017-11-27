@@ -123,19 +123,30 @@ public class Partie
 						}
 						indexCarte = Integer.parseInt(reponseX);
 						carteChoisie = (Carte)this.joueurActif.getMain().toArray()[indexCarte];	
-						if(!this.combinaisonAutorisee(this.getDerniereCarte(cartesAJouer).getValeur(), carteChoisie.getValeur()))
-							while(!this.getDerniereCarte(cartesAJouer).getValeur().equals(carteChoisie.getValeur()))
+						boolean autorise = false;
+						if(this.varianteCourante instanceof VariantePerso)
+							if(((VariantePerso)this.varianteCourante).combinaisonAutorisee(this.getDerniereCarte(cartesAJouer).getValeur(), carteChoisie.getValeur()))
+								autorise = true;
+						while(!this.getDerniereCarte(cartesAJouer).getValeur().equals(carteChoisie.getValeur()) && !autorise)
+						{
+							System.out.println("La carte indiquée ne peut pas être combinée avec la première renseignée (deux valeurs différentes).\nVeuillez en choisir une autre :\n");
+							reponseX = ((JoueurConcret)this.joueurActif).choisirCarteSupplement();
+							if(!reponseX.trim().equals(""))
 							{
-								System.out.println("La carte indiquée ne peut pas être combinée avec la première renseignée (deux valeurs différentes).\nVeuillez en choisir une autre :\n");
-								reponseX = ((JoueurConcret)this.joueurActif).choisirCarteSupplement();
-								if(!reponseX.trim().equals(""))
-								{
-									indexCarte = Integer.parseInt(reponseX);
-									carteChoisie = (Carte)this.joueurActif.getMain().toArray()[indexCarte];
-								}
+								indexCarte = Integer.parseInt(reponseX);
+								carteChoisie = (Carte)this.joueurActif.getMain().toArray()[indexCarte];
+								autorise = false;
+							}
+							else
+								autorise = true;
+							if(this.varianteCourante instanceof VariantePerso)
+							{
+								if(((VariantePerso)this.varianteCourante).combinaisonAutorisee(this.getDerniereCarte(cartesAJouer).getValeur(), carteChoisie.getValeur()))
+									autorise = autorise & true;
 								else
-									break;
-							}							
+									autorise = autorise & false;
+							}
+						}					
 					}
 					if(!reponseX.trim().equals(""))
 					{
@@ -326,14 +337,6 @@ public class Partie
 			return(false);
 		else
 			return(true);
-	}
-	
-	public boolean combinaisonAutorisee(Valeur valeurCartePrecedente, Valeur valeurNouvelleCarte)
-	{
-		if(valeurCartePrecedente.equals(Valeur.AS) || valeurCartePrecedente.equals(Valeur.JOKER) || valeurCartePrecedente.equals(Valeur.HUIT))
-			if(valeurNouvelleCarte.equals(Valeur.AS) || valeurNouvelleCarte.equals(Valeur.JOKER) || valeurNouvelleCarte.equals(Valeur.HUIT))
-				return(true);
-		return(false);
 	}
 	
 	public void annoncerFinDePartie()
