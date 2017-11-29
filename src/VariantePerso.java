@@ -124,8 +124,18 @@ public class VariantePerso extends VarianteAMultiplicateurs
 	public boolean combinaisonAutorisee(Valeur valeurCartePrecedente, Valeur valeurNouvelleCarte)
 	{
 		if(valeurCartePrecedente.equals(Valeur.AS) || valeurCartePrecedente.equals(Valeur.JOKER) || valeurCartePrecedente.equals(Valeur.HUIT))
+		{
 			if(valeurNouvelleCarte.equals(Valeur.AS) || valeurNouvelleCarte.equals(Valeur.JOKER) || valeurNouvelleCarte.equals(Valeur.HUIT))
 				return(true);
-		return(false);
+			else
+				return(false);
+		}
+		else
+		{
+			if(valeurCartePrecedente.equals(valeurNouvelleCarte))
+				return(true);
+			else
+				return(false);
+		}
 	}
 }

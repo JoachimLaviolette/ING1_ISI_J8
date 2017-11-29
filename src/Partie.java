@@ -110,27 +110,19 @@ public class Partie
 					reponse = "N";
 				while(reponse.trim().equals("Y"))
 				{
-					if(this.joueurActif instanceof JoueurConcret)
-						reponseX = ((JoueurConcret)this.joueurActif).choisirCarteSupplement();
-					else
-						reponseX = ((JoueurVirtuel)this.joueurActif).choisirCarteSupplement();
+					reponseX = this.joueurActif.choisirCarteSupplement();
 					if(!reponseX.trim().equals(""))
 					{
-						while(!Partie.estUnEntier(reponseX))
-						{
-							System.out.println("Veuillez indiquer quelle carte choisir :");
-							reponseX = ((JoueurConcret)this.joueurActif).choisirCarteSupplement();
-						}
 						indexCarte = Integer.parseInt(reponseX);
 						carteChoisie = (Carte)this.joueurActif.getMain().toArray()[indexCarte];	
 						boolean autorise = false;
 						if(this.varianteCourante instanceof VariantePerso)
 							if(((VariantePerso)this.varianteCourante).combinaisonAutorisee(this.getDerniereCarte(cartesAJouer).getValeur(), carteChoisie.getValeur()))
 								autorise = true;
-						while(!this.getDerniereCarte(cartesAJouer).getValeur().equals(carteChoisie.getValeur()) && !autorise)
+						while(!this.getDerniereCarte(cartesAJouer).getValeur().equals(carteChoisie.getValeur()) && !autorise && !reponseX.equals(""))
 						{
 							System.out.println("La carte indiquée ne peut pas être combinée avec la première renseignée (deux valeurs différentes).\nVeuillez en choisir une autre :\n");
-							reponseX = ((JoueurConcret)this.joueurActif).choisirCarteSupplement();
+							reponseX = this.joueurActif.choisirCarteSupplement();
 							if(!reponseX.trim().equals(""))
 							{
 								indexCarte = Integer.parseInt(reponseX);
@@ -146,7 +138,7 @@ public class Partie
 								else
 									autorise = autorise & false;
 							}
-						}					
+						}
 					}
 					if(!reponseX.trim().equals(""))
 					{
