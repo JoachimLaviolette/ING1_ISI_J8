@@ -568,14 +568,14 @@ public class Console implements Observer, Runnable
 	 */
 	public void update(Observable o, Object arg) 
 	{
-		//if game 
+		//modèle observé : jeu 
 		if(o instanceof Jeu)
 		{
 			if(arg instanceof String)
 			{
 				switch((String)arg)
 				{
-					/////////// Main menu
+					//Menu principal
 					case "Jouer" :
 						this.controleur.jouer();
 						break;
@@ -583,7 +583,7 @@ public class Console implements Observer, Runnable
 						this.controleur.parametres();
 						break;
 						
-					/////////// Settings menu
+					//Menu paramètres
 					case "Menu principal" :
 						this.controleur.actionMenuPrincipal();
 						break;
@@ -600,7 +600,7 @@ public class Console implements Observer, Runnable
 						this.controleur.confirmerParametresModifies();
 						break;
 						
-					/////////// Game setup menu
+					//Menu jeu (paramétrage de la partie)
 					case "Début de partie" :
 						this.afficherChargementSalon();
 						break;
@@ -611,7 +611,7 @@ public class Console implements Observer, Runnable
 							if(this.instanceDePartie != null)
 							{
 								this.controleur.setPartie(this.instanceDePartie);
-								//the view now observes the match
+								//la vue observe désormais la partie
 								this.instanceDePartie.addObserver(this);
 							}
 						}
@@ -620,7 +620,7 @@ public class Console implements Observer, Runnable
 			}
 		}
 		
-		//if match		
+		//modèle observé : partie		
 		if(o instanceof Partie)
 		{
 			if(arg instanceof String)
@@ -657,13 +657,6 @@ public class Console implements Observer, Runnable
 				{
 					case "Pioche vide" :
 						this.afficherImpossibiliteDePiocher();
-						break;
-					case "Mettre à jour talon" :
-						//this.rafraichirTalon();
-						//this.rafraichirInfos();
-						break;
-					case "Mettre à jour main" :
-						//this.rafraichirInfos();
 						break;
 					case "Demander couleur" :
 						this.controleur.demanderCouleurCarte();

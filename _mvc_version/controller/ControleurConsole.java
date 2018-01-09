@@ -367,7 +367,7 @@ public class ControleurConsole
 	 */
 	public int parametrerNombreJoueurs()
 	{	
-		//save the actual number of decks 
+		//récupère le nombre actuel de paquets de cartes en jeu
 		int nombreDeJeuxAvant = Integer.parseInt(this.instanceDeJeu.getOptionsDeJeu()[1]);	
 		String choixNbJoueurs = null;	
 		do
@@ -383,8 +383,8 @@ public class ControleurConsole
 			}
 		} while(choixNbJoueurs == null);
 		int nombreDeJeuxApres = Integer.parseInt(this.instanceDeJeu.getOptionsDeJeu()[1]);	
-		//check if the number of decks has been changed due to the number of players
-		if(nombreDeJeuxAvant != nombreDeJeuxApres) //if yes, notice the user
+		//vérifie si le nombre de jeux de cartes a été ajusté du au nombre de joueurs
+		if(nombreDeJeuxAvant != nombreDeJeuxApres) //si c'est le cas, notifie le joueur
 			this.console.afficherChangementNombreDecks(nombreDeJeuxAvant, nombreDeJeuxApres);
 		return(Integer.parseInt(choixNbJoueurs));
 	}
