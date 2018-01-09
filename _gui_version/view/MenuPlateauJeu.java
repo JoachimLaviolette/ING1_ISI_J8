@@ -525,7 +525,7 @@ public class MenuPlateauJeu extends VueGraphique
 				panneauActionsJouer.add(panneauTerminerTour);	
 				
 				conteneur.add(panneauActionsJouer, BorderLayout.SOUTH);		
-				fenetre.repaint();
+				fenetre.validate();
 			}
 		};
 		if(EventQueue.isDispatchThread())
@@ -550,7 +550,7 @@ public class MenuPlateauJeu extends VueGraphique
 				panneauPlateau.setBackground(Color.decode("#0B7534"));
 				
 				conteneur.add(panneauPlateau, BorderLayout.CENTER);
-				fenetre.repaint();
+				fenetre.validate();				
 			}
 		};
 		if(EventQueue.isDispatchThread())
@@ -569,7 +569,7 @@ public class MenuPlateauJeu extends VueGraphique
 			{
 				((PanneauCartesPlateau)panneauPlateau).setImageCartePioche(new ImageCarte(bibliotheque.get("pioche_vide"), "pioche_vide", null));
 				panneauPlateau.repaint();
-				fenetre.repaint();
+				fenetre.validate();
 			}
 		};
 		if(EventQueue.isDispatchThread())
@@ -589,7 +589,7 @@ public class MenuPlateauJeu extends VueGraphique
 				bJouer.setEnabled(false);
 				bPiocher.setEnabled(false);
 				bChangerVariante.setEnabled(false);
-				fenetre.repaint();
+				fenetre.validate();
 			}
 		};
 		if(EventQueue.isDispatchThread())
@@ -613,7 +613,7 @@ public class MenuPlateauJeu extends VueGraphique
 					activerRetourPC();
 				else
 					desactiverRetourPC();
-				fenetre.repaint();
+				fenetre.validate();
 			}
 		};
 		if(EventQueue.isDispatchThread())
@@ -668,7 +668,7 @@ public class MenuPlateauJeu extends VueGraphique
 				conteneur.remove(panneauActionsJouer);
 				conteneur.add(panneauActions, BorderLayout.SOUTH);
 				panneauActions.repaint();
-				fenetre.repaint();
+				fenetre.validate();
 			}
 		};
 		if(EventQueue.isDispatchThread())
@@ -688,7 +688,7 @@ public class MenuPlateauJeu extends VueGraphique
 				conteneur.remove(panneauVariantes);
 				conteneur.add(panneauActions, BorderLayout.SOUTH);
 				panneauActions.repaint();
-				fenetre.repaint();
+				fenetre.validate();
 			}
 		};
 		if(EventQueue.isDispatchThread())
@@ -708,7 +708,7 @@ public class MenuPlateauJeu extends VueGraphique
 				conteneur.remove(panneauActions);
 				conteneur.add(panneauActionsJouer, BorderLayout.SOUTH);
 				panneauActionsJouer.repaint();
-				fenetre.repaint();
+				fenetre.validate();
 			}
 		};
 		if(EventQueue.isDispatchThread())
@@ -726,9 +726,9 @@ public class MenuPlateauJeu extends VueGraphique
 			public void run() 
 			{
 				conteneur.remove(panneauActions);
+				conteneur.add(panneauVariantes, BorderLayout.SOUTH);	
 				panneauVariantes.repaint();
-				conteneur.add(panneauVariantes, BorderLayout.SOUTH);		
-				fenetre.repaint();
+				fenetre.validate();
 			}
 		};
 		if(EventQueue.isDispatchThread())

@@ -218,8 +218,8 @@ public class Jeu extends Observable
 			reponse = "1";
 		else
 		{
-			if(!reponse.equals("1") && !reponse.equals("2") && !reponse.equals("3") && !reponse.equals("4") && !reponse.equals("5"));
-				throw new UncompliantChoiceException("Vous devez choisir une des propositions entre [1 et 5].\nVeuillez resaisir la variante :");
+			if(!reponse.equals("1") && !reponse.equals("2") && !reponse.equals("3") && !reponse.equals("4") && !reponse.equals("5"))
+				throw new UncompliantChoiceException("Vous devez choisir une des propositions entre [1 et 5], ou une chaine vide.\nVeuillez resaisir la variante :");
 		}
 		return(reponse);
 	}

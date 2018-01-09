@@ -165,7 +165,10 @@ public class VariantePerso extends VarianteAMultiplicateurs
 						return(true);
 				}
 				else
-					throw new UncompliantSpecialCardSaved("Une carte non-spéciale a été enregistrée.");
+				{
+					if(!cartePrecedente.getValeur().equals(Valeur.JOKER))
+						throw new UncompliantSpecialCardSaved("Une carte non-spéciale a été enregistrée.");
+				}
 			}			
 		}
 		return(false);
@@ -205,7 +208,10 @@ public class VariantePerso extends VarianteAMultiplicateurs
 						return(true);
 				}
 				else
-					throw new UncompliantSpecialCardSaved("Une carte non-spéciale a été enregistrée.");
+				{
+					if(!cartePrecedente.getValeur().equals(Valeur.JOKER))
+						throw new UncompliantSpecialCardSaved("Une carte non-spéciale a été enregistrée.");
+				}
 			}			
 		}
 		return(false);

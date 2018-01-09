@@ -31,6 +31,9 @@ public class Manager
 		else
 			EventQueue.invokeLater(codeGUI);
 		//Console
-		//new Console(jeu);
+		new Thread(() -> 
+		{
+			new Console(jeu);
+		}).start();
 	}
 }

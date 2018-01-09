@@ -63,8 +63,7 @@ public class Partie extends Observable
 	 * Permet d'initialiser une partie de jeu </br> 
 	 * Si aucun objet de la classe existe
 	 * @return Instance de la classe Partie
-	 */
-	
+	 */	
 	public static Partie creerPartie(Jeu instanceDeJeu, Variante varianteChoisie, ArrayList<Joueur> joueursEnregistres)
 	{
 		if(instance == null)
@@ -74,8 +73,7 @@ public class Partie extends Observable
 	
 	/**
 	 * Initialise la main de chaque joueur depuis le jeu de cartes mélangé
-	 */
-	
+	 */	
 	public void initialiserMains()
 	{
 		for(int distribution = 0 ; distribution < 8 ; distribution++)
@@ -178,11 +176,17 @@ public class Partie extends Observable
 	 */
 	public void terminerTour(boolean terminerTour) 
 	{
-		this.notifier("Terminer tour");
-		this.cartesAJouer.removeAll(this.cartesAJouer);
-		if(terminerTour)
-			this.joueurActif = this.joueurActif.getJoueurSuivant();	
-		this.lancerPartie();
+		new Thread(() -> 
+		{
+			this.notifier("Terminer tour");
+			this.cartesAJouer.removeAll(this.cartesAJouer);
+			if(this.joueurActif instanceof JoueurVirtuel)
+				this.attendre(3000);
+			if(terminerTour)
+				this.joueurActif = this.joueurActif.getJoueurSuivant();
+			this.tourTermine = true;			
+			this.lancerPartie();
+		}).start();
 	}	
 	
 	/**
@@ -193,28 +197,32 @@ public class Partie extends Observable
 	 */
 	public void lancerPartie()
 	{	
-		if(!this.joueurGagnantTrouve())
+		new Thread(() -> 
 		{
-			if(this.joueurActif instanceof JoueurConcret)
+			if(!this.joueurGagnantTrouve())
 			{
-				/**
-				 * Notifie les vues que d'afficher le menu de choix d'action de jeu in-game
-				 * Interactions via boutons pour l'interface graphique
-				 * Interactions via saisie pour l'interface console
-				 */
-				this.notifier("Jouer tour");
+				this.tourTermine = false;
+				if(this.joueurActif instanceof JoueurConcret)
+				{
+					/**
+					 * Notifie les vues que d'afficher le menu de choix d'action de jeu in-game
+					 * Interactions via boutons pour l'interface graphique
+					 * Interactions via saisie pour l'interface console
+					 */
+					this.notifier("Jouer tour");
+				}
+				else
+				{
+					/**
+					 * Si le joueur actif est un bot, alors la partie exécute un algo automatisé
+					 * cf. la méthode demarrerTour() de cette classe
+					 */
+					this.faireJouerBot();
+				}
 			}
 			else
-			{
-				/**
-				 * Si le joueur actif est un bot, alors la partie exécute un algo automatisé
-				 * cf. la méthode demarrerTour() de cette classe
-				 */
-				this.faireJouerBot();
-			}
-		}
-		else
-			terminerPartie();
+				terminerPartie();
+		}).start();
 	}
 	
 	/**
@@ -301,7 +309,7 @@ public class Partie extends Observable
 		Carte carte = null;
 		try
 		{
-			this.getJoueurActif().getCarte(choixCarte);
+			carte = this.getJoueurActif().getCarte(choixCarte);
 		}
 		catch(UnexistingCardException e)
 		{
@@ -355,12 +363,25 @@ public class Partie extends Observable
 		 */
 		if(!this.cartesAJouer.isEmpty())
 		{
-			if(!(this.varianteCourante.combinaisonAutorisee(this.cartesAJouer.getLast().getValeur(), carte.getValeur())))
+			if(carte == null)
 			{
-				this.notifier("Erreur de combinaison");
-				this.notifier("Jouer");
 				valide = false;
+				this.terminerActionTour();
 			}
+			else
+			{
+				if(!(this.varianteCourante.combinaisonAutorisee(this.cartesAJouer.getLast().getValeur(), carte.getValeur())))
+				{
+					valide = false;
+					this.notifier("Erreur de combinaison");
+					this.notifier("Jouer");					
+				}
+			}
+		}
+		else
+		{
+			if(carte == null)
+				valide = false;
 		}
 		/**
 		 * S'il s'agit d'une complétion de dépôt VALIDEE ou s'il ne s'agit pas d'une complétion de dépôt, le booléen valide être à vrai
@@ -474,7 +495,7 @@ public class Partie extends Observable
 			/**
 			 * On applique l'effet des cartes déposées en fonction de la variante courante
 			 */
-			this.executerActionAppliquerEffetsCartes(this.cartesAJouer);
+			this.executerActionAppliquerEffetsCartes(this.cartesAJouer);			
 		}
 		/**
 		 * Si le joueur termine son tour sans avoir joué de carte (appui sur bouton (en mode GUI) ou saisie vide (en mode Console))
@@ -767,8 +788,7 @@ public class Partie extends Observable
 	/**
 	 * Endort le thread courant et permet d'attendre un certain temps avant entre la succession de tour
 	 * @param duree Laps de temps d'attente (en secondes)
-	 */
-		
+	 */		
 	public void attendre(int duree)
 	{
 		try
@@ -824,7 +844,7 @@ public class Partie extends Observable
 			if(!choix.trim().equals(""))
 			{
 				if(!choix.equals("1") && !choix.equals("2") && !choix.equals("3") && !choix.equals("4") && !choix.equals("5"))
-					throw new UncompliantChoiceException("Vous devez choisir une réponse réponse entre [1 et 5], ou une chaine vide. Veuillez resaisir votre réponse :");
+					throw new UncompliantChoiceException("Vous devez choisir une réponse réponse entre [1 et 5], ou une chaine vide.\nVeuillez resaisir votre réponse :");
 			}
 		}
 		else
