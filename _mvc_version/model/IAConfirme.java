@@ -10,7 +10,7 @@ import _mvc_version._exceptions.UncompliantSpecialCardSaved;
  * @since 1.0
  * @author Joachim Laviolette
  */
-public class IAConfirme extends IA implements StrategieDeJeu
+public class IAConfirme extends IA 
 {	
 	/**
 	 * Carte enregistrée pour l'algorithme de détermination de cartes jouables

@@ -6,7 +6,7 @@ package _mvc_version.model;
  * @since 1.0
  * @author Joachim Laviolette
  */
-public class IADebutant extends IA implements StrategieDeJeu 
+public class IADebutant extends IA
 {
 	/**
 	 * Crée l'IA débutant

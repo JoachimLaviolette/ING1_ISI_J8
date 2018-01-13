@@ -11,7 +11,7 @@ import _mvc_version._exceptions.UncompliantSpecialCardSaved;
  * @since 1.0
  * @author Joachim Laviolette
  */
-public abstract class IA 
+public abstract class IA implements StrategieDeJeu 
 {
 	/**
 	 * Joueur virtuel associé à l'IA courante

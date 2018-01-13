@@ -8,7 +8,7 @@ import java.util.*;
  * @since 1.0
  * @author Joachim Laviolette
  */
-public class IAAmateur extends IA implements StrategieDeJeu 
+public class IAAmateur extends IA  
 {
 	/**
 	 * Etat utilisé par l'algorithme de complétion de dépôt
