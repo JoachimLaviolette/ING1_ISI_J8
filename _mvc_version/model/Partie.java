@@ -307,10 +307,11 @@ public class Partie extends Observable
 	public void demarrerTour()
 	{
 		String choixAction = this.choisirActionMenuTour();
+		boolean reproposer = false;
 		switch(choixAction)
 		{
 			case "1" :
-				this.jouerTour();
+				reproposer = this.jouerTour();
 				break;
 			case "2" :
 				this.piocher();
@@ -323,19 +324,20 @@ public class Partie extends Observable
 		 * Tant que le joueur virtuel choisit de jouer, on lui repropose automatiquement de compléter son dépot
 		 * S'arrête lorsqu'il choisit de ne plus le compléter
 		 */
-		do
-		{
+		while(reproposer)
+		{	
 			choixAction = this.choisirActionMenuTour();
 			switch(choixAction)
 			{
 				case "1" :
-					this.jouerTour();
+					reproposer = this.jouerTour();
 					break;
 				case "2" :
 					this.terminerActionTour();
+					reproposer = false;
 					break;
 			}
-		} while(choixAction.equals("1"));
+		}
 	}
 	
 	/**
@@ -362,7 +364,7 @@ public class Partie extends Observable
 	/**
 	 * Demande au bot quelle carte il souhaite jouer, puis la joue
 	 */
-	public void jouerTour()
+	public boolean jouerTour()
 	{
 		String choixCarte = this.choisirCarteMenuJouer();
 		Carte carte = null;
@@ -370,11 +372,15 @@ public class Partie extends Observable
 		{
 			carte = this.getJoueurActif().getCarte(choixCarte);
 		}
-		catch(UnexistingCardException e)
+		catch(NumberFormatException e)
 		{
 			e.printStackTrace();
 		}
-		this.jouer(carte);
+		catch(UnexistingCardException e1) // si mauvaise saisie de la part du bot mais normalement impossible
+		{
+			e1.printStackTrace();
+		}
+		return(this.jouer(carte));
 	}
 	
 	/**
@@ -399,22 +405,13 @@ public class Partie extends Observable
 	}
 	
 	/**
-	 * Dans le cas où le joueur complète son dépôt avec une carte, si la combinaison est mauvaise, il lui est demandé de rejouer
-	 */
-	public void erreurCombinaison()
-	{
-		this.jouerTour();		
-	}	
-	
-	/**
 	 * Vérifie que la carte souhaitée être jouée est conforme et la dépose si c'est le cas <br>
 	 * Si la carte n'est pas conforme, le joueur pioche automatiquement et son tour est terminé <br>
 	 * Si la carte n'est pas conforme mais qu'il s'agit d'une complétion de dépôt, une erreur de combinaison est notifée et le joueur doit réitérer son choix
 	 * @param carte Carte que le joueur souhaite jouer
 	 */
-	public void jouer(Carte carte)
+	public boolean jouer(Carte carte)
 	{
-		boolean valide = true;
 		/**
 		 * S'il s'agit d'une complétion de dépôt
 		 * On vérifie que la carte jouée est conforme (même valeur !) que la carte précédente
@@ -422,85 +419,83 @@ public class Partie extends Observable
 		 */
 		if(!this.cartesAJouer.isEmpty())
 		{
+			// saisie vide (console) ou appui bouton "terminer tour" (GUI)
 			if(carte == null)
 			{
-				valide = false;
 				this.terminerActionTour();
+				return(false);
 			}
 			else
 			{
 				if(!(this.varianteCourante.combinaisonAutorisee(this.cartesAJouer.getLast().getValeur(), carte.getValeur())))
 				{
-					valide = false;
 					this.notifier("Erreur de combinaison");
-					this.notifier("Jouer");					
+					return(false);
 				}
 			}
 		}
 		else
 		{
 			if(carte == null)
-				valide = false;
+				return(false);
 		}
 		/**
-		 * S'il s'agit d'une complétion de dépôt VALIDEE ou s'il ne s'agit pas d'une complétion de dépôt, le booléen valide être à vrai
+		 * S'il s'agit d'une complétion de dépôt VALIDEE ou s'il s'agit d'une première carte jouée VALIDEE
 		 * Si c'est le cas, alors on itère l'action de dépôt sur le talon
 		 * Puis on complète le dépôt temporaire 
 		 */
-		if(valide)
+		/**
+		 * Action qui dépose la carte sur le talon si conforme et la retire de la main du joueur
+		 * Mais l'effet n'est pas encore apppliqué
+		 */
+		boolean resultat = this.executerActionJouer(carte);
+		if(resultat)
 		{
+			this.cartesAJouer.add(carte); //dépôt temporaire, complété tant que le tour n'est pas terminé et que le joueur souhaite jouer
 			/**
-			 * Action qui dépose la carte sur le talon si conforme et la retire de la main du joueur
-			 * Mais l'effet n'est pas encore apppliqué
+			 * S'il s'agit d'une IA confirmé, et s'il s'agit de la première carte jouée par le bot, on enregistre celle-ci
+			 * Utile pour que le bot puisse par la suite redéfinir ses cartes jouables pour compléter son dépôt	
+			 * cf. méthode recupererCartesValides() de la classe IAConfirme			
 			 */
-			boolean resultat = this.executerActionJouer(carte);
-			if(resultat)
+			if(this.joueurActif instanceof JoueurVirtuel)
 			{
-				this.cartesAJouer.add(carte); //dépôt temporaire, complété tant que le tour n'est pas terminé et que le joueur souhaite jouer
-				/**
-				 * S'il s'agit d'une IA confirmé, et s'il s'agit de la première carte jouée par le bot, on enregistre celle-ci
-				 * Utile pour que le bot puisse par la suite redéfinir ses cartes jouables pour compléter son dépôt	
-				 * cf. méthode recupererCartesValides() de la classe IAConfirme			
-				 */
-				if(this.joueurActif instanceof JoueurVirtuel)
+				if(((JoueurVirtuel)this.joueurActif).getStrategieCourante() instanceof IAConfirme)
 				{
-					if(((JoueurVirtuel)this.joueurActif).getStrategieCourante() instanceof IAConfirme)
-					{
-						if(((IAConfirme)((JoueurVirtuel)this.joueurActif).getStrategieCourante()).getCarteEnregistree() == null)
-							((IAConfirme)((JoueurVirtuel)this.joueurActif).getStrategieCourante()).setCarteEnregistree(carte);
-					}
+					if(((IAConfirme)((JoueurVirtuel)this.joueurActif).getStrategieCourante()).getCarteEnregistree() == null)
+						((IAConfirme)((JoueurVirtuel)this.joueurActif).getStrategieCourante()).setCarteEnregistree(carte);
 				}
-				/**
-				 * Si le joueur actif est le joueur concret
-				 * On désactive le retour au menu de choix in-game (choix de programmation)
-				 * Le joueur, une fois sa première carte jouer, ne peut plus revenir en arrière
-				 * Il lui est ensuite demander de rejouer 
-				 */
-				else
-				{
-					this.desactiverRetourPossible();
-					this.notifier("Désactiver retour");
-					this.notifier("Jouer");
-				}
-				/**
-				 * On notifie qu'une carte a été jouée, en passant en paramètre l'objet la représentant 
-				 * On vérifie le nombre de cartes en main du joueur, pour lui proposer éventuellement d'annoncer carte
-				 */
-				Object[] arg = {"Carte jouée", carte};
-				this.notifier(arg);
-				this.verifierNombreCartesEnMain();
 			}
 			/**
-			 * S'il s'agit de la première carte jouée par le joueur et que celle-ci n'est pas conforme, alors il doit piocher et son tour est terminé
+			 * Si le joueur actif est le joueur concret
+			 * On désactive le retour au menu de choix in-game (choix de programmation)
+			 * Le joueur, une fois sa première carte jouer, ne peut plus revenir en arrière
+			 * Il lui est ensuite demander de rejouer 
 			 */
 			else
 			{
-				if(this.cartesAJouer.isEmpty())
-				{
-					this.piocher();
-				}			
-			}	
+				this.desactiverRetourPossible();
+				this.notifier("Désactiver retour");
+			}
+			/**
+			 * On notifie qu'une carte a été jouée, en passant en paramètre l'objet la représentant 
+			 * On vérifie le nombre de cartes en main du joueur, pour lui proposer éventuellement d'annoncer carte
+			 */
+			Object[] arg = {"Carte jouée", carte};
+			this.notifier(arg);
+			this.verifierNombreCartesEnMain();
 		}
+		/**
+		 * S'il s'agit de la première carte jouée par le joueur et que celle-ci n'est pas conforme, alors il doit piocher et son tour est terminé
+		 */
+		else
+		{
+			if(this.cartesAJouer.isEmpty())
+			{
+				this.piocher();
+				return(false);
+			}			
+		}
+		return(true);
 	}
 	
 	/**

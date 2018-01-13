@@ -159,6 +159,10 @@ public class ControleurConsole
 				}
 			}
 		} while(choixCarte == null);
+		/**
+		 * Dans le cas d'une saisie non vide, le choix de carte doit correspondre à une carte de la main existante
+		 * Si la saisie est vide, on passe à jouer() null en paramètre
+		 */
 		this.instanceDePartie.jouer(carte);
 	}
 	

@@ -275,8 +275,8 @@ public abstract class Joueur extends Observable
 	 * Retourne la carte à l'index spécifié
 	 * @param index Index de la carte à retourner
 	 * @return Instance de la carte à l'index spécifié
-	 * @throws NumberFormatException Si l'index spécifié n'est pas un nombre}
-	 * @throws UnexistingCardException Si aucune carte n'est trouvée à cet index}
+	 * @throws NumberFormatException Si l'index spécifié n'est pas un nombre
+	 * @throws UnexistingCardException Si aucune carte n'est trouvée à cet index
 	 */
 	public Carte getCarte(String index) throws NumberFormatException, UnexistingCardException
 	{
@@ -289,7 +289,7 @@ public abstract class Joueur extends Observable
 		{
 			throw new UnexistingCardException("Index de carte incorrect (carte inexistante");
 		}
-		return(carte);
+		return(carte);		
 	}
 
 	/**
