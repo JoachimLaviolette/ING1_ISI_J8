@@ -15,16 +15,47 @@ import _mvc_version.model.*;
  */
 public class MenuPrincipal extends VueGraphique
 {
-	//GUI components
+	/**
+	 * Conteneur graphique contenant les composants de la fenêtre
+	 */
 	private Container conteneur;
-	private JPanel panneau, sousPanneau;
-	private JLabel logo, sousTitre;
-	private JButton bJouer, bParametres, bQuitter;
+	/**
+	 * Panneau graphique princpal incoporé à la fenêtre
+	 */
+	private JPanel panneau;
+	/**
+	 * Panneau graphique secondaire incoporé à la fenêtre
+	 */
+	private JPanel sousPanneau;
+	/**
+	 * Label représentant le titre du jeu
+	 */
+	private JLabel titre;
+	/**
+	 * Lable représentant le sous titre du menu principal
+	 */
+	private JLabel sousTitre;
+	/**
+	 * Bouton permettant de jouer
+	 */
+	private JButton bJouer;
+	/**
+	 * Bouton permettant d'accéder aux paramètres
+	 */
+	private JButton bParametres;
+	/**
+	 * Bouton permttant de quitter le jeu
+	 */
+	private JButton bQuitter;
 	
-	//Model elements
+	/**
+	 * Instance du jeu
+	 */
 	private Jeu instanceDeJeu;
 	
-	//Controller
+	/**
+	 * Contrôleur du bouton associé
+	 */
 	private ControleurMenuPrincipal controleurBoutonJouer, controleurBoutonParametres, controleurBoutonQuitter;
 	
 	/**
@@ -74,10 +105,10 @@ public class MenuPrincipal extends VueGraphique
 		this.sousPanneau.setBackground(Color.decode("#0B7534"));
 				
 		//Labels
-		this.logo = new JLabel("J8 - LE JEU DU 8 AMERICAIN");
-		this.logo.setHorizontalAlignment(SwingConstants.CENTER);
-		this.logo.setFont(new Font(Font.DIALOG, Font.BOLD, 35));
-		this.logo.setForeground(Color.BLACK);
+		this.titre = new JLabel("J8 - LE JEU DU 8 AMERICAIN");
+		this.titre.setHorizontalAlignment(SwingConstants.CENTER);
+		this.titre.setFont(new Font(Font.DIALOG, Font.BOLD, 35));
+		this.titre.setForeground(Color.BLACK);
 		
 		this.sousTitre = new JLabel("- MENU PRINCIPAL -");			
 		this.sousTitre.setHorizontalAlignment(SwingConstants.CENTER);
@@ -110,7 +141,7 @@ public class MenuPrincipal extends VueGraphique
 		//Composing
 		this.sousPanneau.add(bouton_i1);
 		this.sousPanneau.add(bouton_i2);
-		this.sousPanneau.add(this.logo);
+		this.sousPanneau.add(this.titre);
 		this.sousPanneau.add(this.sousTitre);		
 		this.sousPanneau.add(this.bJouer);
 		this.sousPanneau.add(this.bParametres);

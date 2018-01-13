@@ -8,8 +8,17 @@ package _mvc_version.model;
  */
 public class Carte 
 {
+	/**
+	 * Valeur de la carte
+	 */
 	private Valeur valeur;
+	/**
+	 * Symbole de la carte
+	 */
 	private Symbole symbole;
+	/**
+	 * Couleur de la carte
+	 */
 	private Couleur couleur;
 	
 	/**

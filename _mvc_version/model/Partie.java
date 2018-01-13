@@ -5,27 +5,64 @@ import java.util.*;
 import _mvc_version._exceptions.*;
 
 /**
- * Classe d'une partie de jeu (singleton) </br>
+ * Classe d'une partie de jeu (singleton) <br>
  * Représente la structure et le comportement d'une partie 
  * @author Joachim Laviolette
  * @version 1.0
  */
 public class Partie extends Observable
 {
+	/**
+	 * Instance de partie courante enregistrée
+	 */
 	private static Partie instance;
+	/**
+	 * Instance du jeu
+	 */
 	private Jeu instanceDeJeu;
+	/**
+	 * Variante courante de la partie
+	 */
 	private Variante varianteCourante;
+	/**
+	 * Joueur actif (jouant le tour courant)
+	 */
 	private Joueur joueurActif;
+	/**
+	 * Joueur gagant de la partie
+	 */
 	private Joueur joueurGagnant;
+	/**
+	 * Joueurs ayant vidé leur main
+	 */
 	private ArrayList<Joueur> joueursAyantFini;
+	/**
+	 * Joueurs de la partie
+	 */
 	private ArrayList<Joueur> joueursDeLaPartie;
+	/**
+	 * Talon de carte
+	 */
 	private LinkedList<Carte> talon;
+	/**
+	 * Pioche de jeu
+	 */
 	private LinkedList<Carte> pioche;
-	private boolean estLancee, tourTermine = true;
-	
+	/**
+	 * Liste de cartes contenant les cartes du dépôt du joueur actif
+	 */
 	private LinkedList<Carte> cartesAJouer;
-	private Carte carteChoisie;
-	
+	/**
+	 * Etat de la partie courante
+	 */
+	private boolean estLancee;
+	/**
+	 * Etat du tour courant
+	 */	
+	private boolean tourTermine = true;	
+	/**
+	 * Etat de retour (possible si aucune carte n'a encore été jouée)
+	 */
 	private boolean retourPossible;
 	
 	/**
@@ -59,9 +96,12 @@ public class Partie extends Observable
 	}
 	
 	/**
-	 * Méthode publique interrogeant la classe </br>
-	 * Permet d'initialiser une partie de jeu </br> 
+	 * Méthode publique interrogeant la classe <br>
+	 * Permet d'initialiser une partie de jeu <br> 
 	 * Si aucun objet de la classe existe
+	 * @param instanceDeJeu Instance du jeu
+	 * @param varianteChoisie Vartiante choisie pour la partie
+	 * @param joueursEnregistres Joueurs enregistrés pour la partie
 	 * @return Instance de la classe Partie
 	 */	
 	public static Partie creerPartie(Jeu instanceDeJeu, Variante varianteChoisie, ArrayList<Joueur> joueursEnregistres)
@@ -93,8 +133,8 @@ public class Partie extends Observable
 	}
 
 	/**
-	 * Initialise la pioche </br>
-	 * Cette méthode interroge la variante courante </br>
+	 * Initialise la pioche <br>
+	 * Cette méthode interroge la variante courante <br>
 	 * Selon la variante, certaines cartes peuvent être exclues (ie. JOKER)
 	 * @param optionsDeJeu Tableau contenant les options basiques du jeu (nombre de joueurs, nombre de paquets de cartes, activation de score)
 	 */
@@ -114,7 +154,7 @@ public class Partie extends Observable
 	}
 	
 	/**
-	 * Demande au joueur de piocher (action indépendante du type de joueur, ou de la variante) </br>
+	 * Demande au joueur de piocher (action indépendante du type de joueur, ou de la variante) <br>
 	 * Termine automatiquement le tour par la suite
 	 */
 	public void piocher()
@@ -132,10 +172,10 @@ public class Partie extends Observable
 	}
 	
 	/**
-	 * Permet de changer la variante de la partie </br>
-	 * Si le paramètre en entrée est une chaine vide (correspond à la touche entrée de la saisie utilisateur), aucun changement produit </br>
-	 * On notifie explicitement les vues qu'il faut revenir au menu de jeu in-game seulement dans ce cas </br>
-	 * Dans le cas où une variante est spéciifiée, à la réception de la notification, la vue conséquente se chargera elle-même de ré-afficher le menu </br>
+	 * Permet de changer la variante de la partie <br>
+	 * Si le paramètre en entrée est une chaine vide (correspond à la touche entrée de la saisie utilisateur), aucun changement produit <br>
+	 * On notifie explicitement les vues qu'il faut revenir au menu de jeu in-game seulement dans ce cas <br>
+	 * Dans le cas où une variante est spéciifiée, à la réception de la notification, la vue conséquente se chargera elle-même de ré-afficher le menu <br>
 	 * Le traitement est le même uniquement pour l'affichage console
 	 * @param nomNouvelleVariante Nom/clé de la nouvelle variante choisie
 	 */
@@ -167,61 +207,80 @@ public class Partie extends Observable
 	}
 		
 	/**
-	 * Termine un tour en changeant le joueur actif actuel par son successeur </br>
-	 * si vrai, alors le joueur actif doit être changé </br>
-	 * sinon, le joueur actif reste le même </br>
-	 * Utile notamment pour l'application de l'effet faisant rejouer le joueur par exemple </br>
+	 * Termine un tour en changeant le joueur actif actuel par son successeur <br>
+	 * si vrai, alors le joueur actif doit être changé <br>
+	 * sinon, le joueur actif reste le même <br>
+	 * Utile notamment pour l'application de l'effet faisant rejouer le joueur par exemple <br>
 	 * cf. la méthode appliquerEffetCartes() des sous-classes de variantes
 	 * @param terminerTour Booléen indiquant s'il faut modifier ou non le joueur actif
 	 */
-	public void terminerTour(boolean terminerTour) 
+	public synchronized void terminerTour(boolean terminerTour) 
 	{
-		new Thread(() -> 
-		{
-			this.notifier("Terminer tour");
-			this.cartesAJouer.removeAll(this.cartesAJouer);
-			if(this.joueurActif instanceof JoueurVirtuel)
-				this.attendre(3000);
-			if(terminerTour)
-				this.joueurActif = this.joueurActif.getJoueurSuivant();
-			this.tourTermine = true;			
-			this.lancerPartie();
-		}).start();
+		this.notifier("Terminer tour");
+		this.cartesAJouer.removeAll(this.cartesAJouer);
+		if(this.joueurActif instanceof JoueurVirtuel)
+			this.attendre(3000);
+		if(terminerTour)
+			this.joueurActif = this.joueurActif.getJoueurSuivant();
+		this.tourTermine = true;
+		/**
+		 * Notifie le thread de la méthode lancerPartie() qu'il peut reprendre son activité
+		 */
+		this.notifyAll();	
 	}	
 	
 	/**
-	 * Démarre une partie en lançant un tour  </br>
-	 * Méthode rappelée par la méthode de terminaison de tour </br>
-	 * Si un joueur gagnant est trouvé, alors termine la partie </br>
+	 * Démarre une partie en lançant un tour <br>
+	 * Méthode rappelée par la méthode de terminaison de tour <br>
+	 * Si un joueur gagnant est trouvé, alors termine la partie <br>
 	 * Sinon, fait jouer le joueur actif		
 	 */
 	public void lancerPartie()
 	{	
 		new Thread(() -> 
 		{
-			if(!this.joueurGagnantTrouve())
+			synchronized(this) 
 			{
-				this.tourTermine = false;
-				if(this.joueurActif instanceof JoueurConcret)
+				if(!this.joueurGagnantTrouve())
 				{
+					this.tourTermine = false;
+					if(this.joueurActif instanceof JoueurConcret)
+					{
+						/**
+						 * Notifie les vues que d'afficher le menu de choix d'action de jeu in-game
+						 * Interactions via boutons pour l'interface graphique
+						 * Interactions via saisie pour l'interface console
+						 */
+						this.notifier("Jouer tour");
+					}
+					else
+					{
+						/**
+						 * Si le joueur actif est un bot, alors la partie exécute un algo automatisé
+						 * cf. la méthode demarrerTour() de cette classe
+						 */
+						this.faireJouerBot();
+					}
 					/**
-					 * Notifie les vues que d'afficher le menu de choix d'action de jeu in-game
-					 * Interactions via boutons pour l'interface graphique
-					 * Interactions via saisie pour l'interface console
+					 * Tant que le tour n'est pas terminé, le thread se met en attente
+					 * C'est l'action de terminer tour qui notifiera ce thred qu'il peut reprendre son activité
 					 */
-					this.notifier("Jouer tour");
+					while(!this.tourTermine)
+					{
+						try
+						{
+							this.wait();
+						}
+						catch(InterruptedException e)
+						{
+							e.printStackTrace();
+						}
+					}
+					this.lancerPartie();
 				}
 				else
-				{
-					/**
-					 * Si le joueur actif est un bot, alors la partie exécute un algo automatisé
-					 * cf. la méthode demarrerTour() de cette classe
-					 */
-					this.faireJouerBot();
-				}
+					terminerPartie();
 			}
-			else
-				terminerPartie();
 		}).start();
 	}
 	
@@ -348,8 +407,8 @@ public class Partie extends Observable
 	}	
 	
 	/**
-	 * Vérifie que la carte souhaitée être jouée est conforme et la dépose si c'est le cas </br>
-	 * Si la carte n'est pas conforme, le joueur pioche automatiquement et son tour est terminé </br>
+	 * Vérifie que la carte souhaitée être jouée est conforme et la dépose si c'est le cas <br>
+	 * Si la carte n'est pas conforme, le joueur pioche automatiquement et son tour est terminé <br>
 	 * Si la carte n'est pas conforme mais qu'il s'agit d'une complétion de dépôt, une erreur de combinaison est notifée et le joueur doit réitérer son choix
 	 * @param carte Carte que le joueur souhaite jouer
 	 */
@@ -445,8 +504,8 @@ public class Partie extends Observable
 	}
 	
 	/**
-	 * Vérifie que la carte souhaitée être jouée est conforme </br>
-	 * Si c'est le cas, la carte est ajoutée au talon </br>
+	 * Vérifie que la carte souhaitée être jouée est conforme <br>
+	 * Si c'est le cas, la carte est ajoutée au talon <br>
 	 * Le retrait de la main du joueur est effectué par la méthode jouerCarte de la classe joueur
 	 * @param carteAJouer La carte que le joueur souhaite jouer
 	 * @return Booléen à vrai si la carte souhaitée est conforme et a été déposée, faux sinon
@@ -468,8 +527,8 @@ public class Partie extends Observable
 	}
 	
 	/**
-	 * Méthode appelée une fois que le joueur choisit de terminer son tour </br>
-	 * Sa complétion de dépôt est terminée, cette méthode demande à la variante courante d'appliquer les effets des cartes déposées </br>
+	 * Méthode appelée une fois que le joueur choisit de terminer son tour <br>
+	 * Sa complétion de dépôt est terminée, cette méthode demande à la variante courante d'appliquer les effets des cartes déposées <br>
 	 */
 	public void terminerActionTour()
 	{
@@ -506,7 +565,7 @@ public class Partie extends Observable
 	}
 	
 	/**
-	 * Vérifie le nombre de cartes en main du joueurs </br>
+	 * Vérifie le nombre de cartes en main du joueurs <br>
 	 * S'il n'en possède plus qu'une, on lui propose d'annoncer carte
 	 */
 	public void verifierNombreCartesEnMain()
@@ -516,8 +575,8 @@ public class Partie extends Observable
 	}
 	
 	/**
-	 * Exécute l'action "jouer" du côté joueur </br>
-	 * Le joueur interroge la méthode jouerCarte() de cette classe qui retourne un booléen </br>
+	 * Exécute l'action "jouer" du côté joueur <br>
+	 * Le joueur interroge la méthode jouerCarte() de cette classe qui retourne un booléen <br>
 	 * Si vrai, la méthode jouer() de la classe exécute son traitement (retrait de la carte de la main)
 	 * @param carte Carte que le joueur souhaite jouer
 	 * @return Booléen à vrai si la carte a pu être jouée (si conforme etc.), faux sinon
@@ -590,7 +649,7 @@ public class Partie extends Observable
 	}	
 	
 	/**
-	 * Première méthode de détection de fin de partie </br>
+	 * Première méthode de détection de fin de partie <br>
 	 * Vérifie si un joueur de la partie ne possède plus de cartes (automatiquement le premier trouvé)
 	 * @return Booléen à vrai si un joueur ne possède plus de cartes, faux sinon
 	 */
@@ -608,9 +667,9 @@ public class Partie extends Observable
 	}
 	
 	/**
-	 * Deuxième méthode de détection de fin de partie </br>
-	 * Vérifie le nombre de joueurs ayant terminé (n'ayant donc plus de carte en main) </br>
-	 * Une fois chaque joueur analysé, la méthode compare le nombre de joueurs total de la partie et le nombre de joueurs aant terminé </br>
+	 * Deuxième méthode de détection de fin de partie <br>
+	 * Vérifie le nombre de joueurs ayant terminé (n'ayant donc plus de carte en main) <br>
+	 * Une fois chaque joueur analysé, la méthode compare le nombre de joueurs total de la partie et le nombre de joueurs aant terminé <br>
 	 * Si la différence est de 1, c'est qu'il ne reste qu'une seul joueur ayant des cartes en main, la partie est donc terminée
 	 * @return Booléen à vrai s'il ne reste plus qu'un seul joueur ayant des cartes en main, faux sinon
 	 */
@@ -706,7 +765,7 @@ public class Partie extends Observable
 	}	
 
 	/**
-	 * Vérifie s'il est toujours possible de piocher une carte </br>
+	 * Vérifie s'il est toujours possible de piocher une carte <br>
 	 * Si le talon ne comporte qu'une seule carte, et que la pioche est vide, alors il n'est plus possible de piocher 
 	 * @return Booléean à vrai s'il est toujours possible de piocher, faux sinon
 	 */
@@ -744,7 +803,7 @@ public class Partie extends Observable
 	}
 	
 	/**
-	 * Enregistre le symbole demandé à la suite d'un dépôt de 8 (si l'effet produit est la demande de symbole) </br>
+	 * Enregistre le symbole demandé à la suite d'un dépôt de 8 (si l'effet produit est la demande de symbole) <br>
 	 * Analyse l'index de choix en paramètre, et convertit cela en carte temporaire qui est enregistrée au niveau de la variante courante
 	 * @param choix Index de choix représentant le symbole demandé
 	 */
@@ -768,7 +827,7 @@ public class Partie extends Observable
 	}
 	
 	/**
-	 * Enregistre la couleur demandée à la suite d'un dépôt de 8 (si l'effet produit est la demande de couleur) </br>
+	 * Enregistre la couleur demandée à la suite d'un dépôt de 8 (si l'effet produit est la demande de couleur) <br>
 	 * Analyse l'index de choix en paramètre, et convertit cela en carte temporaire qui est enregistrée au niveau de la variante courante
 	 * @param choix Index de choix représentant la couleur demandée
 	 */
@@ -806,7 +865,7 @@ public class Partie extends Observable
 	 * @return Index représentant l'action choisie par le joueur {1,2,3} si joueur concret, {1,2} si joueur virtuel 
 	 * @throws UncompliantChoiceException Si une mauvaise saisie est réalisée
 	 */
-	public String demanderActionTour() throws GameException
+	public String demanderActionTour() throws UncompliantChoiceException
 	{
 		String choix = this.joueurActif.choisirAction();
 		if(!(!choix.trim().equals("") && (Partie.estUnEntier(choix)) && (Integer.parseInt(choix) <= 3 && Integer.parseInt(choix) >= 1)))
@@ -821,7 +880,7 @@ public class Partie extends Observable
 	 * @return Index représentant la carte choisie par le joueur
 	 * @throws UncompliantChoiceException Si une mauvaise saisie est réalisée
 	 */
-	public String demanderCarte() throws GameException 
+	public String demanderCarte() throws UncompliantChoiceException 
 	{
 		String choix = this.joueurActif.choisirCarte();
 		if(!choix.trim().equals("") && !((Partie.estUnEntier(choix)) && (Integer.parseInt(choix) <= this.joueurActif.getMain().size() && Integer.parseInt(choix) >= 1)))
@@ -834,9 +893,9 @@ public class Partie extends Observable
 	/**
 	 * Demande au joueur actif la variante
 	 * @return Index représentant la variante choisie
-	 * @throws UncompliantChoiceException Si un joueur virtuel choisit l'action numéro 3 en cours de partie
+	 * @throws UncompliantChoiceException Si une mauvaise saisie est réalisée par le joueur virtuel (ie. action 3)
 	 */
-	public String demanderVariante() throws GameException
+	public String demanderVariante() throws UncompliantChoiceException
 	{
 		String choix = (((JoueurConcret)this.joueurActif).choisirVariante());
 		if(this.joueurActif instanceof JoueurConcret)
@@ -853,12 +912,12 @@ public class Partie extends Observable
 	}
 	
 	/**
-	 * Interroge le joueur quant à la couleur souhaitée à la suite d'un dépôt de 8 </br>
+	 * Interroge le joueur quant à la couleur souhaitée à la suite d'un dépôt de 8 <br>
 	 * Méthode appelée par le controleur console
 	 * @return Index caractérisant la couleur choisie
 	 * @throws UncompliantChoiceException Si une mauvaise saisie est réalisée
 	 */
-	public String demanderCouleurCarte() throws GameException
+	public String demanderCouleurCarte() throws UncompliantChoiceException
 	{
 		String choix = this.choisirCouleurCarte(null);
 		if(!choix.equals("1") && !choix.equals("2"))
@@ -869,12 +928,12 @@ public class Partie extends Observable
 	}
 	
 	/**
-	 * Interroge le joueur quant au symbole souhaité à la suite d'un dépôt de 8 </br>
+	 * Interroge le joueur quant au symbole souhaité à la suite d'un dépôt de 8 <br>
 	 * Méthode appelée par le controleur console 
 	 * @return Index caractérisant le symbole choisi
 	 * @throws UncompliantChoiceException Si une mauvaise saisie est réalisée
 	 */
-	public String demanderSymboleCarte() throws GameException
+	public String demanderSymboleCarte() throws UncompliantChoiceException
 	{ 
 		String choix = this.choisirSymboleCarte(null);
 		if(!choix.equals("1") && !choix.equals("2") && !choix.equals("3") && !choix.equals("4"))
@@ -885,12 +944,12 @@ public class Partie extends Observable
 	}
 	
 	/**
-	 * Interroge le joueur quant à l'annonce de carte s'il ne lui en reste qu'une en main </br>
+	 * Interroge le joueur quant à l'annonce de carte s'il ne lui en reste qu'une en main <br>
 	 * Méthode appelée par le controleur console
 	 * @return Réponse du joueur
 	 * @throws UncompliantChoiceException Si une mauvaise saisie est réalisée
 	 */
-	public String demanderAnnoncerCarte() throws GameException
+	public String demanderAnnoncerCarte() throws UncompliantChoiceException
 	{
 		String choix = this.choisirAnnoncerCarte(null);
 		if(!(choix).equals("Y") && !(choix).equals("N"))
@@ -901,7 +960,7 @@ public class Partie extends Observable
 	}
 	
 	/**
-	 * Si un index de couleur est spécifié en paramètre, la méthode enregistre directement la couleur demandée </br>
+	 * Si un index de couleur est spécifié en paramètre, la méthode enregistre directement la couleur demandée <br>
 	 * Sinon, elle demande au joueur de la choisir
 	 * @param choixCouleur Index de la couleur choisie qui peut être null
 	 * @return Index de la couleur choisie (utile pour le controleur console, si la saisie est erronée)
@@ -916,7 +975,7 @@ public class Partie extends Observable
 	}
 	
 	/**
-	 * Si un index de symbole est spécifié en paramètre, la méthode enregistre directement le symbole demandé </br>
+	 * Si un index de symbole est spécifié en paramètre, la méthode enregistre directement le symbole demandé <br>
 	 * Sinon, elle demande au joueur de le choisir
 	 * @param choixSymbole Index du symbole choisi qui peut être null
 	 * @return Index du symbole choisi (utile pour le controleur console, si la saisie est erronée)
@@ -931,8 +990,8 @@ public class Partie extends Observable
 	}
 	
 	/**
-	 * Si une clé de choix d'annonce est spécifiée, la méthode l'évalue </br>
-	 * Si "Y", alors le joueur annonce carte </br>
+	 * Si une clé de choix d'annonce est spécifiée, la méthode l'évalue <br>
+	 * Si "Y", alors le joueur annonce carte <br>
 	 * Sinon (si "N" ou autre saisie), aucun traitement, on retourne la clé pour le controleur console qui se charge de vérifier la conformité
 	 * @param choixAnnonce Index du choix d'annoncer carte, saisi par le joueur (Y ou N)
 	 * @return Clé du choix d'annonce
@@ -1084,7 +1143,7 @@ public class Partie extends Observable
 	}
 	
 	/**
-	 * Notifie les vues observatrices du modèle de Partie qu'un changement a été effectué </br>
+	 * Notifie les vues observatrices du modèle de Partie qu'un changement a été effectué <br>
 	 * A chaque fois qu'un changement est effectué, concrètement ou abstraitement, les vues sont notifiées 
 	 * @param arg Objet de notification (ie. message, instance etc.)
 	 */

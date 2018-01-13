@@ -15,6 +15,9 @@ import _mvc_version.view.*;
  */
 public class ControleurMenuParametres
 {
+	/**
+	 * Vue associée au contrôleur
+	 */
 	private MenuParametres vue;
 	
 	/**

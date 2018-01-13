@@ -14,6 +14,10 @@ import _mvc_version.model.Partie;
  */
 public class PanneauCartesMainJoueur extends PanneauCartes
 {	
+	/**
+	 * Liste représentant la main graphique du joueur <br>
+	 * Les cartes étant ici représentées sous forme de bouton customisés cliquables
+	 */
 	private LinkedList<BoutonCarte> listeCartes;
 		
 	/**

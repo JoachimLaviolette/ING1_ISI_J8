@@ -20,26 +20,116 @@ import _mvc_version.model.*;
  */
 public class MenuPlateauJeu extends VueGraphique
 {
-	//GUI components
+	/**
+	 * Conteneur graphique contenant les composants de la fenêtre
+	 */
 	private Container conteneur;
-	private JPanel panneauTitre, panneauInfos, panneauPlateau, panneauActions, panneauActionsJouer, panneauCartes, panneauVariantes, panneauRetourPC, panneauTerminerTour;
+	/**
+	 * Panneau graphique contenant le nom du jeu
+	 */
+	private JPanel panneauTitre;
+	/**
+	 * Panneau graphique contenant les informations de la partie (nombre de cartes (pioche, talon, mains des joueurs)) 
+	 */
+	private JPanel panneauInfos; 
+	/**
+	 * Panneau graphique représentant le plateau de jeu
+	 */
+	private JPanel panneauPlateau;
+	/**
+	 * Panneau graphique contenant les actions du tour
+	 */
+	private JPanel panneauActions;
+	/**
+	 * Panneau graphique contenant les actions de retour et fin de tour
+	 */
+	private JPanel panneauActionsJouer;
+	/**
+	 * Panneau graphique contenant la main du joueur
+	 */
+	private JPanel panneauCartes;
+	/**
+	 * Panneau graphique contenant les différentes variantes (en cas de changement)
+	 */
+	private JPanel panneauVariantes;
+	/**
+	 * Panneau graphique contenant le bouton de retour (si le joueur a cliqué au préalable sur jouer)
+	 */
+	private JPanel panneauRetourPC;
+	/**
+	 * Panneau graphique contenant le bouton de fin de tour
+	 */
+	private JPanel panneauTerminerTour;
+	/**
+	 * Lable représentant le titre du jeu apparaisant en haut de la fenêtre
+	 */
 	private JLabel titre;
+	/**
+	 * Zone de texte représentant l'ensemble des infos de la partie
+	 */
 	private JTextArea infos;
-	private JButton bJouer, bPiocher, bChangerVariante;
-	private JButton bRetourPC, bRetourPV, bTerminerTour;
+	/**
+	 * Permet de jouer 
+	 */
+	private JButton bJouer;
+	/**
+	 * Permet de piocher 
+	 */
+	private JButton bPiocher;
+	/**
+	 * Permet de changer de variante 
+	 */
+	private JButton bChangerVariante;
+	/**
+	 * Permet de revenir au choix d'action de tour depuis la main du joueur
+	 */
+	private JButton bRetourPC;
+	/**
+	 * Permet de revenir au choix d'action de tour depuis le panneau de sélection de variante
+	 */
+	private JButton bRetourPV;
+	/**
+	 * Permet de terminer le tour
+	 */
+	private JButton bTerminerTour;
+	/**
+	 * Permet de sélectionner la variante associée
+	 */
 	private JButton bVMinimale, bVMonclar, bV4, bV5, bVPerso;
+	/**
+	 * Panneau déroulant contenant la main graphique du joueur
+	 */
 	private JScrollPane panneauDeCartes;
-	private ArrayList<ImageCarte> imagesCartesPlateau, imagesCartesJoueur;
+	/**
+	 * Liste des imageCarte des cartes du plateau
+	 */
+	private ArrayList<ImageCarte> imagesCartesPlateau;
+	/**
+	 * Liste des imageCarte des cartes de la main du joueur
+	 */
+	private ArrayList<ImageCarte> imagesCartesJoueur;
 	
-	//Map collection
+	/**
+	 * Collection contenant l'ensemble des images brutes des cartes d'une partie et les clés associées à chacune d'entre elles
+	 */
 	private HashMap<String, Image> bibliotheque;
 	
-	//Model elements
+	/**
+	 * Instance de la partie courante
+	 */
 	private Partie instanceDePartie;
+	/**
+	 * Instance du jeu
+	 */
 	private Jeu instanceDeJeu;
 	
-	//Controller
+	/**
+	 * Contrôleur du bouton associé
+	 */
 	private ControleurMenuPlateauJeu controleurBoutonJouer, controleurBoutonPiocher, controleurBoutonChangerVariante, controleurBoutonRetourPC, controleurBoutonTerminerTour;
+	/**
+	 * Contrôleur du bouton associé
+	 */
 	private ControleurMenuPlateauJeu controleurBoutonVMinimiale, controleurBoutonVMonclar, controleurBoutonV4, controleurBoutonV5, controleurBoutonVPerso, controleurBoutonRetourPV;
 	
 	/**
@@ -855,7 +945,7 @@ public class MenuPlateauJeu extends VueGraphique
 			public void run() 
 			{
 				fermer();
-				new MenuParametres(instanceDeJeu);
+				new MenuPrincipal(instanceDeJeu);
 			}
 		};
 		if(EventQueue.isDispatchThread())
@@ -958,9 +1048,6 @@ public class MenuPlateauJeu extends VueGraphique
 						break;
 					case "Annonce carte effectuée" :
 						this.signalerAnnonceCarte();
-						break;
-					case "Carte demandée" :
-						//TODO
 						break;
 					case "Terminer partie" :
 						this.annoncerFinDePartie();

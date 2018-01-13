@@ -15,22 +15,96 @@ import _mvc_version.model.*;
  */
 public class MenuJeu extends VueGraphique
 {
-	//GUI components
+	/**
+	 * Conteneur graphique contenant les composants de la fenêtre
+	 */
 	private Container conteneur;
-	private JPanel panneau, sousPanneau, panneauChoix, panneauBoutons;
-	private JPanel panneauChoixVariante, panneauChoixNbJoueurs, panneauChoixPseudo, panneauChoixDifficulte;
-	private JLabel titre, sousTitreVariante, sousTitreNbJoueurs, sousTitrePseudo, sousTitreDifficulte;
-	private JComboBox<JTextField> selectChoixVariante, selectChoixDifficulte;
-	private JTextField champChoixNbJoueurs, champChoixPseudo;
+	/**
+	 * Panneau graphique principal
+	 */
+	private JPanel panneau; 
+	/**
+	 * Panneau graphique secondaire
+	 */
+	private JPanel sousPanneau;
+	/**
+	 * Panneau graphique contenant les choix
+	 */
+	private JPanel panneauChoix;
+	/**
+	 * Panneau graphique contenant les boutons d'action
+	 */
+	private JPanel panneauBoutons;
+	/**
+	 * Panneau graphique contenant la liste de sélection de variante
+	 */
+	private JPanel panneauChoixVariante;
+	/**
+	 * Panneau graphique contenant le champ de saisie du nombre de joueurs
+	 */
+	private JPanel panneauChoixNbJoueurs; 
+	/**
+	 * Panneau graphique contenant le champ de saisie du pseudo
+	 */
+	private JPanel panneauChoixPseudo; 
+	/**
+	 * Panneau graphique contenant la liste de sélection de difficulté
+	 */
+	private JPanel panneauChoixDifficulte;
+	/**
+	 * Label pour le titre du jeu
+	 */
+	private JLabel titre; 
+	/**
+	 * Label pour la variante à choisir
+	 */
+	private JLabel sousTitreVariante; 
+	/**
+	 * Label pour le nombre de joueurs à choisir
+	 */
+	private JLabel sousTitreNbJoueurs; 
+	/**
+	 * Label pour le pseudo à choisir
+	 */
+	private JLabel sousTitrePseudo;
+	/**
+	 * Label pour la difficulté à choisir
+	 */
+	private JLabel sousTitreDifficulte;
+	/**
+	 * Champ de sélection de la variante
+	 */
+	private JComboBox<JTextField> selectChoixVariante;
+	/**
+	 * Champ de sélection de la difficulté
+	 */
+	private JComboBox<JTextField> selectChoixDifficulte;
+	/**
+	 * Champ de saisie du nombre de joueurs
+	 */
+	private JTextField champChoixNbJoueurs;
+	/**
+	 * Champ de saisie du pseudo
+	 */
+	private JTextField champChoixPseudo;
+	/**
+	 * Permet de lancer la partie
+	 */
 	private JButton bSuivant;
+	/**
+	 * Permet de revenir au menu principal
+	 */
 	private JButton bRetour;
 	
-	//Model elements
+	/**
+	 * Instance du jeu
+	 */
 	private Jeu instanceDeJeu;
 	
-	//Controllers
-	private ControleurMenuJeu controleurBoutonSuivant;
-	private ControleurMenuJeu controleurBoutonRetour;
+	/**
+	 * Contrôleur du bouton associé
+	 */
+	private ControleurMenuJeu controleurBoutonSuivant, controleurBoutonRetour;
 	
 	/**
 	 * Crée le menu de jeu

@@ -14,12 +14,22 @@ import _mvc_version.model.*;
  */
 public class Console implements Observer, Runnable 
 {
-	//Model elements
+	/**
+	 * Instance du jeu
+	 */
 	private Jeu instanceDeJeu;	
+	/**
+	 * Instance de la partie
+	 */
 	private Partie instanceDePartie;
+	/**
+	 * Thread gérant le terminal
+	 */
 	private Thread threadConsole;
 	
-	//Controller
+	/**
+	 * Contrôleur de la vue console
+	 */
 	private ControleurConsole controleur;		
 	
 	/**

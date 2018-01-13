@@ -10,7 +10,13 @@ import java.util.*;
  */
 public abstract class VarianteAMultiplicateurs extends Variante
 {
+	/**
+	 * Mutiplicateur utilisé lorsqu'une carte spéciale provoque l'action de pioche au prochain joueur qui ne pourra pas compléter le combo
+	 */
 	protected int multiplicateurDePioche;
+	/**
+	 * Mutiplicateur utilisé lorsque plusieurs cartes sautant le tour du joueur suivant sont combinées et que l'auteur des cartes a fait un (ou plusieurs) tour(s) complet(s)
+	 */
 	protected int multiplicateurDeTour;
 	
 	/**

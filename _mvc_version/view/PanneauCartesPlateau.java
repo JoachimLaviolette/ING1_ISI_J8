@@ -11,7 +11,14 @@ import java.util.*;
  */
 public class PanneauCartesPlateau extends PanneauCartes
 {	
-	private ImageCarte imageCarteTalon, imageCartePioche;
+	/**
+	 * Instance de l'imageCarte de la carte du talon de jeu
+	 */
+	private ImageCarte imageCarteTalon;
+	/**
+	 * Instance de l'imageCarte de la carte de la pioche (vue de dos, ou vide)
+	 */
+	private ImageCarte imageCartePioche;
 	
 	/**
 	 * Crée le panneau de cartes représentant le plateau de jeu

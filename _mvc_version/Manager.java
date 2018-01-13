@@ -33,7 +33,7 @@ public class Manager
 		//Console
 		new Thread(() -> 
 		{
-			new Console(jeu);
+			//new Console(jeu);
 		}).start();
 	}
 }

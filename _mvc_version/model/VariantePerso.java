@@ -141,11 +141,14 @@ public class VariantePerso extends VarianteAMultiplicateurs
 		{
 			if(this.carteEnMemoire == null)	
 			{
-				if(this.partieAssociee.getDerniereCarte(this.partieAssociee.getTalon()).getValeur().equals(Valeur.JOKER))
+				Carte carteTalon = this.partieAssociee.getDerniereCarte(this.partieAssociee.getTalon());
+				if(carteTalon.getValeur().equals(Valeur.JOKER) || carteTalon.getValeur().equals(Valeur.HUIT) || carteTalon.getValeur().equals(Valeur.AS))
 					return(true);
-				else 
+				else
+				{
 					if(carteAJouer.getSymbole().equals(this.partieAssociee.getDerniereCarte(this.partieAssociee.getTalon()).getSymbole()) || carteAJouer.getValeur().equals(this.partieAssociee.getDerniereCarte(this.partieAssociee.getTalon()).getValeur()))
 						return(true);
+				}
 			}
 			else
 			{
@@ -176,7 +179,7 @@ public class VariantePerso extends VarianteAMultiplicateurs
 
 	/**
 	 * Méthode utilisée pour l'IA uniquement. Vérifie si la carte spécifiée est jouable en fonction de la carte du talon
-	 * @param carteAjouer Carte à jouer
+	 * @param carteAJouer Carte à jouer
 	 * @return Booléen à vrai si la carte est jouable, faux sinon
 	 * @throws UncompliantSpecialCardSaved Si une carte non-spéciale a été enregistrée
 	 */
@@ -188,11 +191,14 @@ public class VariantePerso extends VarianteAMultiplicateurs
 		{
 			if(this.carteEnMemoire == null)	
 			{
-				if(this.partieAssociee.getDerniereCarte(this.partieAssociee.getTalon()).getValeur().equals(Valeur.JOKER))
+				Carte carteTalon = this.partieAssociee.getDerniereCarte(this.partieAssociee.getTalon());
+				if(carteTalon.getValeur().equals(Valeur.JOKER) || carteTalon.getValeur().equals(Valeur.HUIT) || carteTalon.getValeur().equals(Valeur.AS))
 					return(true);
-				else 
+				else
+				{
 					if(carteAJouer.getSymbole().equals(this.partieAssociee.getDerniereCarte(this.partieAssociee.getTalon()).getSymbole()) || carteAJouer.getValeur().equals(this.partieAssociee.getDerniereCarte(this.partieAssociee.getTalon()).getValeur()))
 						return(true);
+				}
 			}
 			else
 			{

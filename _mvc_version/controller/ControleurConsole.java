@@ -12,8 +12,17 @@ import _mvc_version.view.*;
  */
 public class ControleurConsole 
 {
+	/**
+	 * Vue console associée au contrôleur
+	 */
 	private Console console;
+	/**
+	 * Instance du jeu
+	 */
 	private Jeu instanceDeJeu;
+	/**
+	 * Instance de la partie
+	 */
 	private Partie instanceDePartie;
 	
 	/**
@@ -514,7 +523,7 @@ public class ControleurConsole
 	}
 	
 	/**
-	 * Demande à la vue d'afficher les indications de modification du nombre de joueurs </br>
+	 * Demande à la vue d'afficher les indications de modification du nombre de joueurs <br>
 	 * Demande la saisie du nombre de joueurs (paramètres)
 	 */
 	public void modificationNombreJoueurs()
@@ -532,7 +541,7 @@ public class ControleurConsole
 	}
 	
 	/**
-	 * Demande à la vue d'afficher les indications de modification du nombre de paquets de cartes </br>
+	 * Demande à la vue d'afficher les indications de modification du nombre de paquets de cartes <br>
 	 * Demande la saisie du nombre de paquets de cartes (paramètres)
 	 */
 	public void modificationNombrePaquetsCartes()
@@ -550,7 +559,7 @@ public class ControleurConsole
 	}
 	
 	/**
-	 * Demande à la vue d'afficher les indications de modification de l'état du système de score </br>
+	 * Demande à la vue d'afficher les indications de modification de l'état du système de score <br>
 	 * Demande la saisie de l'état du système de score (paramètres)
 	 */
 	public void modificationSystemeScore()

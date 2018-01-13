@@ -34,7 +34,7 @@ public class IADebutant extends IA implements StrategieDeJeu
 	public String choisirCarte() 
 	{
 		int indexCarte = this.determinerIndexCarteAJouerAleatoirement();
-		Carte carteChoisie = (Carte)this.bot.getMain().toArray()[indexCarte];
+		Carte carteChoisie = (Carte)this.bot.getMain().get(indexCarte);
 		return(this.determinerIndexCarte(carteChoisie));
 	}
 

@@ -8,15 +8,21 @@ import _mvc_version.view.Console;
 import _mvc_version.view.MenuPlateauJeu;
 
 /**
- * Classe d'une instance de jeu </br>
- * Représente la structure et le comportement d'une instance de jeu </br>
+ * Classe d'une instance de jeu <br>
+ * Représente la structure et le comportement d'une instance de jeu <br>
  * Permet de démarrer l'application et de paramétrer une partie au préalable de son lancement
  * @author Joachim Laviolette
  * @version 1.0
  */
 public class Jeu extends Observable 
 {
+	/**
+	 * Instance de la partie de jeu
+	 */
 	private Partie partieDeJeu;
+	/**
+	 * Tableau d'options de jeu
+	 */
 	private String[] optionsDeJeu = new String[3];
 	
 	/**
@@ -71,7 +77,7 @@ public class Jeu extends Observable
 	}
 	
 	/**
-	 * Demande aux vues d'afficher l'interface de jeu </br>
+	 * Demande aux vues d'afficher l'interface de jeu <br>
 	 * Démarre la partie	
 	 */
 	public void demarrer()
@@ -81,7 +87,7 @@ public class Jeu extends Observable
 	}
 	
 	/**
-	 * Ajoute tous les joueurs de la partie au même salon </br>
+	 * Ajoute tous les joueurs de la partie au même salon <br>
 	 * Notifie les vues que la partie peut démarrer	
 	 */
 	public void creerSalon()
@@ -93,9 +99,9 @@ public class Jeu extends Observable
 	}	
 			
 	/**
-	 * Formate tous les paramètres nécessaires à la création de partie en fonction de ce qui a été saisi par l'utilisateur </br>
-	 * Enregistre les joueurs en fonction du nombre indiqué </br>
-	 * Initialise leurs mains </br>
+	 * Formate tous les paramètres nécessaires à la création de partie en fonction de ce qui a été saisi par l'utilisateur <br>
+	 * Enregistre les joueurs en fonction du nombre indiqué <br>
+	 * Initialise leurs mains <br>
 	 * Crée l'instance de partie ainsi que le salon puis démarre la partie 
 	 * @param choixVariante Index représentant la variante choisie
 	 * @param nbJ Nombre de joueurs de la partie
@@ -165,7 +171,7 @@ public class Jeu extends Observable
 	 * @return Index représentant l'action à exécuter
 	 * @throws UncompliantChoiceException Si une mauvaise saisie est réalisée
 	 */
-	public String choisirActionMenuParametres() throws GameException
+	public String choisirActionMenuParametres() throws UncompliantChoiceException
 	{
 		BufferedReader scanner = new BufferedReader(new InputStreamReader(System.in));
 		String reponse = new String();
@@ -201,7 +207,7 @@ public class Jeu extends Observable
 	 * @return Index représentant la variante de la partie
 	 * @throws UncompliantChoiceException Si une mauvaise saisie est réalisée
 	 */
-	public String choisirVariante() throws GameException
+	public String choisirVariante() throws UncompliantChoiceException
 	{
 		BufferedReader scanner = new BufferedReader(new InputStreamReader(System.in));
 		String reponse = new String();
@@ -229,7 +235,7 @@ public class Jeu extends Observable
 	 * @return Nombre de joueurs de la partie représenté sous forme de chaine
 	 * @throws UncompliantChoiceException Si une mauvaise saisie est réalisée
 	 */
-	public String choisirNombreJoueurs() throws GameException
+	public String choisirNombreJoueurs() throws UncompliantChoiceException
 	{
 		BufferedReader scanner = new BufferedReader(new InputStreamReader(System.in));
 		String reponse = new String();		
@@ -264,7 +270,7 @@ public class Jeu extends Observable
 	 * @return Pseudo saisi par l'utilisateur
 	 * @throws UncompliantChoiceException Si une mauvaise saisie est réalisée
 	 */
-	public String choisirPseudo() throws GameException
+	public String choisirPseudo() throws UncompliantChoiceException
 	{
 		BufferedReader scanner = new BufferedReader(new InputStreamReader(System.in));
 		String reponse = new String();
@@ -288,7 +294,7 @@ public class Jeu extends Observable
 	 * @return Index représentant la difficulté de la partie
 	 * @throws UncompliantChoiceException Si une mauvaise saisie est réalisée
 	 */
-	public String choisirDifficulte() throws GameException
+	public String choisirDifficulte() throws UncompliantChoiceException
 	{
 		BufferedReader scanner = new BufferedReader(new InputStreamReader(System.in));
 		String reponse = new String();	
@@ -315,7 +321,7 @@ public class Jeu extends Observable
 	 * @return Nombre de joueurs de la partie représenté sous forme de chaine
 	 * @throws UncompliantChoiceException Si une mauvaise saisie est réalisée
 	 */
-	public String modifierNombreJoueurs() throws GameException
+	public String modifierNombreJoueurs() throws UncompliantChoiceException
 	{
 		BufferedReader scanner = new BufferedReader(new InputStreamReader(System.in));
 		String reponse = new String();		
@@ -379,7 +385,7 @@ public class Jeu extends Observable
 	 * @return Index/clé représentant l'état du système de score (Y ou N)
 	 * @throws UncompliantChoiceException Si une mauvaise saisie est réalisée
 	 */
-	public String modifierSystemeScore() throws GameException
+	public String modifierSystemeScore() throws UncompliantChoiceException
 	{
 		BufferedReader scanner = new BufferedReader(new InputStreamReader(System.in));
 		String reponse = new String();
@@ -527,6 +533,7 @@ public class Jeu extends Observable
 	
 	/**
 	 * Retourne l'instance de partie courante si le demandeur est une vue autorisée 
+	 * @param demandeur Instance de l'objet souhaitant accéder à l'instance de partie
 	 * @return Instance de la partie courante
 	 */
 	public Partie obtenirPartie(Object demandeur)
@@ -569,7 +576,7 @@ public class Jeu extends Observable
 	}
 	
 	/**
-	 * Vérifie si le nombre de jeux de cartes est suffisant pour servir l'ensemble des joueurs </br>
+	 * Vérifie si le nombre de jeux de cartes est suffisant pour servir l'ensemble des joueurs <br>
 	 * Si le nombre de joueurs est trop important par rapport au nombre de jeux de cartes enregistré, l'algorithme appelant ajuste automatiquement le nombre de paquets
 	 * @param nombreJoueurs Nombre de joueurs spécifié 
 	 * @return Booléen à vrai si le nombre de jeux de cartes suffit à servir la totalité des joueurs, faux sinon
@@ -586,9 +593,9 @@ public class Jeu extends Observable
 	 * Vérifie si le nombre de joueurs actuellement enregistré n'est pas trop élevé par rapport au nombre de jeux de cartes que l'on souhaite enregistré
 	 * @param nombreJeuxDeCartes Nombre de jeux de cartes que l'on souhaite enregistré
 	 * @return Booléen à vrai si le nombre de joueurs et le nombre de jeux de cartes sont compatibles, faux sinon
-	 * @throws GameException Si le nombre de joueurs et le nombre de jeux de cartes demandé ne sont pas compatibles
+	 * @throws UncompliantChoiceException Si le nombre de joueurs et le nombre de jeux de cartes demandé ne sont pas compatibles
 	 */
-	public boolean verifierCompatibiliteNbCartesNbJoueurs(int nombreJeuxDeCartes) throws GameException
+	public boolean verifierCompatibiliteNbCartesNbJoueurs(int nombreJeuxDeCartes) throws UncompliantChoiceException
 	{
 		if((nombreJeuxDeCartes * 54) - (8 * Integer.parseInt(this.optionsDeJeu[0])) > 0)
 			return(true);

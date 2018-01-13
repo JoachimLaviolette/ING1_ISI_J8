@@ -12,7 +12,13 @@ import _mvc_version._exceptions.UncompliantSpecialCardSaved;
  */
 public class IAConfirme extends IA implements StrategieDeJeu
 {	
+	/**
+	 * Carte enregistrée pour l'algorithme de détermination de cartes jouables
+	 */
 	private Carte carteEnregistree;
+	/**
+	 * Ensemble des cartes jouables par le bot
+	 */
 	private ArrayList<Carte> cartesJouables;
 	
 	/**

@@ -12,7 +12,13 @@ import java.util.*;
  */
 public abstract class VueGraphique implements Observer
 {
+	/**
+	 * Instance de la classe abstraite Toolkit permettant de manipuler les valeurs natives des composants graphiques (taille d'écran etc)
+	 */
 	protected Toolkit toolkit;
+	/**
+	 * Instance de la fenêtre courante
+	 */
 	protected JFrame fenetre;
 	
 	/**

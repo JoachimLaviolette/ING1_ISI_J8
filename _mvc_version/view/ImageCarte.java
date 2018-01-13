@@ -12,8 +12,17 @@ import _mvc_version.model.Carte;
  */
 public class ImageCarte
 {
+	/**
+	 * Image brute de la carte 
+	 */
 	private Image image;
+	/**
+	 * Clé représentant la carte
+	 */
 	private String cle;
+	/**
+	 * Carte associée
+	 */
 	private Carte carte;
 	
 	/**

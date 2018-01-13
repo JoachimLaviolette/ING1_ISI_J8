@@ -10,6 +10,9 @@ import java.util.*;
  */
 public class IAAmateur extends IA implements StrategieDeJeu 
 {
+	/**
+	 * Etat utilisé par l'algorithme de complétion de dépôt
+	 */
 	private boolean doitTrouver;
 	
 	/**
@@ -57,8 +60,8 @@ public class IAAmateur extends IA implements StrategieDeJeu
 	}
 	
 	/**
-	 * Détermine un index aléatoirement </br>
-	 * Si cet index vaut 1, l'IA va tenter de compléter le dépot avec une carte conforme </br>
+	 * Détermine un index aléatoirement <br>
+	 * Si cet index vaut 1, l'IA va tenter de compléter le dépot avec une carte conforme <br>
 	 * Sinon, elle sélectionnera une carte non-conforme
 	 */
 	public String choisirCarteSupplement() 

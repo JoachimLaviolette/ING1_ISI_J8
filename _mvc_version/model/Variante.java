@@ -12,9 +12,21 @@ import _mvc_version._exceptions.*;
  */
 public abstract class Variante 
 {
+	/**
+	 * Instance de la partie courante
+	 */
 	protected Partie partieAssociee;
+	/**
+	 * Carte spéciale sauvegardée en mémoire
+	 */
 	protected Carte carteEnMemoire;
+	/**
+	 * Carte demandée (couleur, symbole) sauvegardée
+	 */
 	protected Carte carteDemandee;
+	/**
+	 * ID de la vue courante
+	 */
 	protected int ID;
 	
 	/**
@@ -218,6 +230,7 @@ public abstract class Variante
 	 * Vérifie si la carte spécifiée (celle qui souhaite être jouée) est conforme avec celle du talon
 	 * @param carteAJouer Carte à jouer
 	 * @return Booléen à vrai si la carte est conforme, faux sinon
+	 * @throws UncompliantSpecialCardSaved Si une carte non-spéciale a été enregistrée}
 	 */
 	public abstract boolean verifierConformiteCarte(Carte carteAJouer) throws UncompliantSpecialCardSaved;
 	
@@ -225,8 +238,7 @@ public abstract class Variante
 	 * Méthode utilisée pour l'IA uniquement. Vérifie si la carte spécifiée est jouable en fonction de la carte du talon
 	 * @param carteAjouer Carte à jouer
 	 * @return Booléen à vrai si la carte est jouable, faux sinon
-	 * @throws UncompliantSpecialCardSaved Si une carte non-spéciale a été enregistrée
+	 * @throws UncompliantSpecialCardSaved UncompliantSpecialCardSaved Si une carte non-spéciale a été enregistrée
 	 */
-	public abstract boolean estJouable(Carte carteAjouer) throws UncompliantSpecialCardSaved;
-	
+	public abstract boolean estJouable(Carte carteAjouer) throws UncompliantSpecialCardSaved;	
 }

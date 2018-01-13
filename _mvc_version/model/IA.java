@@ -13,6 +13,9 @@ import _mvc_version._exceptions.UncompliantSpecialCardSaved;
  */
 public abstract class IA 
 {
+	/**
+	 * Joueur virtuel associé à l'IA courante
+	 */
 	protected JoueurVirtuel bot;
 	
 	/**
@@ -49,7 +52,7 @@ public abstract class IA
 	 */
 	public int determinerIndexActionAExecuterAleatoirement()
 	{
-		int indexAleatoire = (int)(1 + (Math.random() * (3 - 1)));	
+		int indexAleatoire = 1 + (int)(Math.random() * (3 - 1));	
 		return(indexAleatoire);
 	}
 	
@@ -80,7 +83,7 @@ public abstract class IA
 	 */
 	public int determinerSymboleCarteAJouerAleatoirement()
 	{
-		int indexAleatoire = (int)(1 + (Math.random() * (5 - 1)));	
+		int indexAleatoire = 1 + (int)(Math.random() * (5 - 1));	
 		return(indexAleatoire);
 	}
 	
@@ -90,7 +93,7 @@ public abstract class IA
 	 */
 	public int determinerCouleurCarteAJouerAleatoirement()
 	{
-		int indexAleatoire = (int)(1 + (Math.random() * (3 - 1)));	
+		int indexAleatoire = 1 + (int)(Math.random() * (3 - 1));	
 		return(indexAleatoire);
 	}
 	

@@ -12,13 +12,37 @@ import _mvc_version._exceptions.*;
  */
 public abstract class Joueur extends Observable
 {
+	/**
+	 * Instance de la partie courante
+	 */
 	protected Partie partieEnCours;
+	/**
+	 * Pseudo du joueur
+	 */
 	protected String pseudo;
+	/**
+	 * Nombre de points du joueur
+	 */
 	protected int points;
+	/**
+	 * Main du joueur
+	 */
 	protected LinkedList<Carte> main;
+	/**
+	 * Etat de l'annonce carte du joueur
+	 */
 	protected boolean annonceCarte;
+	/**
+	 * Successeur du joueur
+	 */
 	protected Joueur joueurSuivant;
+	/**
+	 * Predecesseur du joueur
+	 */
 	protected Joueur joueurPrecedent;
+	/**
+	 * Adversaires du joueur
+	 */
 	protected ArrayList<Joueur> adversaires;
 		
 	/**
@@ -60,11 +84,11 @@ public abstract class Joueur extends Observable
 	}
 	
 	/**
-	 * Action de jouer une carte </br>
-	 * Le joueur demande à la partie de jouer la carte spécifiée </br>
-	 * Celle-ci va vérifier auprès de sa variante la conformité de la carte </br>
-	 * Si la conformité est approuvée, la partie ajoute a carte au talon et renvoie true </br>
-	 * L'algo ci-présent analyse le booléen </br>
+	 * Action de jouer une carte <br>
+	 * Le joueur demande à la partie de jouer la carte spécifiée <br>
+	 * Celle-ci va vérifier auprès de sa variante la conformité de la carte <br>
+	 * Si la conformité est approuvée, la partie ajoute a carte au talon et renvoie true <br>
+	 * L'algo ci-présent analyse le booléen <br>
 	 * Si vrai, la carte est retirée de la main du joueur
 	 * @param carteAJouer Carte à jouer
 	 * @return Booléen à vrai si le joueur a joué, faux sinon
@@ -86,7 +110,7 @@ public abstract class Joueur extends Observable
 		
 	/**
 	 * Action de piocher une carte
-	 * @return
+	 * @return Booléen à vrai si le jouur a pioché, faux sinon
 	 */
 	public boolean piocher()
 	{
@@ -249,8 +273,10 @@ public abstract class Joueur extends Observable
 	
 	/**
 	 * Retourne la carte à l'index spécifié
-	 * @param index
-	 * @return
+	 * @param index Index de la carte à retourner
+	 * @return Instance de la carte à l'index spécifié
+	 * @throws NumberFormatException Si l'index spécifié n'est pas un nombre}
+	 * @throws UnexistingCardException Si aucune carte n'est trouvée à cet index}
 	 */
 	public Carte getCarte(String index) throws NumberFormatException, UnexistingCardException
 	{

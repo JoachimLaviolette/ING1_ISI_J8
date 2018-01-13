@@ -11,6 +11,9 @@ import java.util.*;
  */
 public abstract class PanneauCartes extends JPanel
 {
+	/**
+	 * Liste représentant graphiquement un ensemble de cartes
+	 */
 	protected ArrayList<ImageCarte> imagesCartes;
 	
 	/**

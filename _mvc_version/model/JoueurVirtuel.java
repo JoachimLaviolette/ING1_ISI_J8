@@ -27,8 +27,8 @@ public class JoueurVirtuel extends Joueur
 	}
 
 	/**
-	 * Interroge l'algo de l'IA réelle qu'implémente le joueur virtuel </br>
-	 * La méthode de choix d'action diffèrant selon l'IA implémentée </br>
+	 * Interroge l'algo de l'IA réelle qu'implémente le joueur virtuel <br>
+	 * La méthode de choix d'action diffèrant selon l'IA implémentée <br>
 	 * Retourne un index représentant l'action (générique) à exécuter
 	 * @return Index représentant l'action à exécuter
 	 */
@@ -39,8 +39,8 @@ public class JoueurVirtuel extends Joueur
 	}
 
 	/**
-	 * Interroge l'algo de l'IA réelle qu'implémente le joueur virtuel </br>
-	 * La méthode de carte d'action diffèrant selon l'IA implémentée </br>
+	 * Interroge l'algo de l'IA réelle qu'implémente le joueur virtuel <br>
+	 * La méthode de carte d'action diffèrant selon l'IA implémentée <br>
 	 * Retour l'index de la carte à jouer
 	 * @return Index de la carte à jouer 
 	 */
@@ -51,8 +51,8 @@ public class JoueurVirtuel extends Joueur
 	}
 
 	/**
-	 * Interroge l'algo de l'IA réelle qu'implémente le joueur virtuel </br>
-	 * La méthode de choix de symbole diffèrant selon l'IA implémentée </br>
+	 * Interroge l'algo de l'IA réelle qu'implémente le joueur virtuel <br>
+	 * La méthode de choix de symbole diffèrant selon l'IA implémentée <br>
 	 * Retourne la réponse du joueur, sous forme d'index
 	 * @return Réponse du joueur sous forme d'index {1, 2, 3, 4}
 	 */
@@ -63,8 +63,8 @@ public class JoueurVirtuel extends Joueur
 	}
 	
 	/**
-	 * Interroge l'algo de l'IA réelle qu'implémente le joueur virtuel </br>
-	 * La méthode de choix de couleur diffèrant selon l'IA implémentée </br>
+	 * Interroge l'algo de l'IA réelle qu'implémente le joueur virtuel <br>
+	 * La méthode de choix de couleur diffèrant selon l'IA implémentée <br>
 	 * Retourne la réponse du joueur, sous forme d'index
 	 * @return Réponse du joueur, sous forme d'index {1, 2}
 	 */
@@ -75,7 +75,7 @@ public class JoueurVirtuel extends Joueur
 	}
 
 	/**
-	 * Interroge l'algo de l'IA réelle qu'implémente le joueur virtuel </br>
+	 * Interroge l'algo de l'IA réelle qu'implémente le joueur virtuel <br>
 	 * Retourne l'index d'une carte à jouer en supplément (pour compléter le dépôt)
 	 * @return Index de la carte à jouer en supplément
 	 */
@@ -86,7 +86,7 @@ public class JoueurVirtuel extends Joueur
 	}
 	
 	/**
-	 * Interroge l'algo de l'IA réelle qu'implémente le joueur virtuel </br>
+	 * Interroge l'algo de l'IA réelle qu'implémente le joueur virtuel <br>
 	 * Retourne la réponse du joueur, sous forme d'une clé
 	 * @return Réponse du joueur {Y, N}
 	 */
@@ -97,7 +97,7 @@ public class JoueurVirtuel extends Joueur
 	}
 	
 	/**
-	 * Interroge l'algo de l'IA réelle qu'implémente le joueur virtuel </br>
+	 * Interroge l'algo de l'IA réelle qu'implémente le joueur virtuel <br>
 	 * Retourne la réponse du joueur, sous forme d'une clé 
 	 * @return Réponse du joueur {Y, N}
 	 */

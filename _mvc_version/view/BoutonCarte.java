@@ -12,7 +12,13 @@ import _mvc_version.model.*;
  */
 public class BoutonCarte extends JButton
 {
+	/**
+	 * ImageCarte associé au bouton
+	 */
 	private ImageCarte imageCarte;
+	/**
+	 * Carte associée au bouton
+	 */
 	private Carte carte;
 	
 	/**

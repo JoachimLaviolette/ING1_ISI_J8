@@ -11,6 +11,9 @@ import java.util.*;
  */
 public class JoueurConcret extends Joueur
 {
+	/**
+	 * Instance du joueur concret enregistré
+	 */
 	private static JoueurConcret instance;
 	
 	/**
@@ -28,11 +31,11 @@ public class JoueurConcret extends Joueur
 	
 	/**
 	 * Vérifie si une instance de joueur concret existe déjà et en crée si ce n'est pas le cas
-	 * @param partie
-	 * @param pseudoEnregistre
-	 * @param joueurSuivant
-	 * @param joueurPrecedent
-	 * @param adversaires
+	 * @param partie Partie courante
+	 * @param pseudoEnregistre Pseudo du joueur
+	 * @param joueurSuivant Successeur du joueur
+	 * @param joueurPrecedent Predecesseur du joueur
+	 * @param adversaires Adervsaires du joueur
 	 * @return Instance de joueur concret
 	 */
 	public static Joueur creerJoueurConcret(Partie partie, String pseudoEnregistre, Joueur joueurSuivant, Joueur joueurPrecedent, ArrayList<Joueur> adversaires) 

@@ -15,19 +15,75 @@ import _mvc_version.model.*;
  */
 public class MenuParametres extends VueGraphique
 {
-	//GUI components
+	/**
+	 * Conteneur graphique contenant les composants de la fenêtre
+	 */
 	private Container conteneur;
-	private JPanel panneau, sousPanneau, panneauChoix, panneauBoutons;
-	private JPanel panneauChoixNbJoueurs, panneauChoixNbPaquets;
-	private JLabel titre, sousTitreNbJoueurs, sousTitreNbPaquets, sousTitreActivationScore;
-	private JTextField champChoixNbJoueurs, champChoixNbPaquets;
+	/**
+	 * Panneau graphique principal
+	 */
+	private JPanel panneau;
+	/**
+	 * Panneau graphique secondaire
+	 */
+	private JPanel sousPanneau;
+	/**
+	 * Panneau graphique pour les choix 
+	 */
+	private JPanel panneauChoix;
+	/**
+	 * Panneau graphique pour les boutons d'action
+	 */
+	private JPanel panneauBoutons;
+	/**
+	 * Panneau graphique contenant le champ de saisie du nombre de joueurs
+	 */
+	private JPanel panneauChoixNbJoueurs;
+	/**
+	 * Panneau graphique contenant le champ de saisie du nombre de paquets
+	 */
+	private JPanel panneauChoixNbPaquets;
+	/**
+	 * Label pour le titre du jeu
+	 */
+	private JLabel titre;
+	/**
+	 * Label pour le choix du nombre de joueurs
+	 */
+	private JLabel sousTitreNbJoueurs;
+	/**
+	 * Label pour le choix du nombre de paquets
+	 */
+	private JLabel sousTitreNbPaquets;
+	/**
+	 * Label pour l'action du système de score
+	 */
+	private JLabel sousTitreActivationScore;
+	/**
+	 * Champ de saisie du nombre de joueurs
+	 */
+	private JTextField champChoixNbJoueurs;
+	/**
+	 * Champ de saisie du nombre de paquets de cartes 
+	 */
+	private JTextField champChoixNbPaquets;
+	/**
+	 * Checkbox pour l'activation (ou non) du système de score
+	 */
 	private JCheckBox boxScore;
+	/**
+	 * Permet de valider les paramètres
+	 */
 	private JButton bValider;	
 	
-	//Model elements
+	/**
+	 * Instance du jeu
+	 */
 	private Jeu instanceDeJeu;
 	
-	//Controllers
+	/**
+	 * Contrôleur de la fenêtre
+	 */
 	private ControleurMenuParametres controleurMenuParametres;
 	
 	/**

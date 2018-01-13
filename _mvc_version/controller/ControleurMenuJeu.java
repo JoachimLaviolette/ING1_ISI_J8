@@ -15,6 +15,9 @@ import _mvc_version.view.*;
  */
 public class ControleurMenuJeu 
 {
+	/**
+	 * Vue associée au contrôleur
+	 */
 	private MenuJeu vue;
 	
 	/**
