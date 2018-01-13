@@ -363,6 +363,7 @@ public class Partie extends Observable
 	
 	/**
 	 * Demande au bot quelle carte il souhaite jouer, puis la joue
+	 * @return Booléen à vrai si le joueur a véritablement joué, faux sinon
 	 */
 	public boolean jouerTour()
 	{
@@ -409,6 +410,7 @@ public class Partie extends Observable
 	 * Si la carte n'est pas conforme, le joueur pioche automatiquement et son tour est terminé <br>
 	 * Si la carte n'est pas conforme mais qu'il s'agit d'une complétion de dépôt, une erreur de combinaison est notifée et le joueur doit réitérer son choix
 	 * @param carte Carte que le joueur souhaite jouer
+	 * @return Booléen à vrai si le joueur a véritablement joué, faux sinon
 	 */
 	public boolean jouer(Carte carte)
 	{
