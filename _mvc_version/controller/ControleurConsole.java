@@ -506,7 +506,7 @@ public class ControleurConsole
 	}
 	
 	/**
-	 * Demande a saisie de l'état du système de score (paramètres)
+	 * Demande la saisie de l'état du système de score (paramètres)
 	 * @return Clé représentant l'état du système de score
 	 */
 	public String choisirActivationSystemeScore()

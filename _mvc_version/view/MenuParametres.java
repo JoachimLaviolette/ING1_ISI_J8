@@ -273,11 +273,12 @@ public class MenuParametres extends VueGraphique
 	 */
 	private void ouvrirMenuPrincipal()
 	{
+		this.instanceDeJeu.deleteObserver(this);
 		Runnable code = new Runnable() {
 			public void run() 
 			{
 				fermer();
-				new MenuParametres(instanceDeJeu);
+				new MenuPrincipal(instanceDeJeu);
 			}
 		};
 		if(EventQueue.isDispatchThread())

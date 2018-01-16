@@ -941,6 +941,8 @@ public class MenuPlateauJeu extends VueGraphique
 	 */
 	private void ouvrirMenuPrincipal()
 	{
+		this.instanceDeJeu.deleteObserver(this);
+		this.instanceDePartie.deleteObserver(this);
 		Runnable code = new Runnable() {
 			public void run() 
 			{

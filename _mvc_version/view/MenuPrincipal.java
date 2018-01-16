@@ -64,17 +64,16 @@ public class MenuPrincipal extends VueGraphique
 	 */
 	public MenuPrincipal(Jeu jeu)
 	{
-		//Initializes the common window's components
 		super();
 		this.instanceDeJeu = jeu; 
 		
-		//The view observes the game instance
+		//La vue observe l'instance de jeu
 		this.instanceDeJeu.addObserver(this);
 		
-		//Initializes the specific window's components
+		//Initialise les composants spécifiques à la fenêtre
 		this.initialiserFenetre();
 		
-		//Creating the controllers
+		//Création des contrôleurs
 		this.controleurBoutonJouer = new ControleurMenuPrincipal(this.bJouer, jeu);
 		this.controleurBoutonParametres = new ControleurMenuPrincipal(this.bParametres, jeu);
 		this.controleurBoutonQuitter = new ControleurMenuPrincipal(this.bQuitter, jeu);
@@ -157,9 +156,10 @@ public class MenuPrincipal extends VueGraphique
 	 */
 	private void ouvrirMenuJeu()
 	{
+		this.instanceDeJeu.deleteObserver(this);
 		Runnable code = new Runnable() {
 			public void run() 
-			{
+			{				
 				fermer();
 				new MenuJeu(instanceDeJeu);
 			}
@@ -175,6 +175,7 @@ public class MenuPrincipal extends VueGraphique
 	 */
 	private void ouvrirMenuParametres()
 	{
+		this.instanceDeJeu.deleteObserver(this);
 		Runnable code = new Runnable() {
 			public void run() 
 			{
